@@ -1,7 +1,8 @@
 {
   "name": "myFiles",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular"
 }
