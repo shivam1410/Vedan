@@ -8,9 +8,9 @@ I'm building this app according to my needs. This pdf viewer is like a Library. 
 follow the Official Documentation of [Ionic](https://ionicframework.com/docs/installation/cli) to install the Cli on your System. Make sure to follow all the steps.
 
 ## Plugins used
--cordova-plugin-file
--cordova-plugin-file-opener2
--[cordova-plugin-document-viewer](https://github.com/sitewaerts/cordova-plugin-document-viewer)
+- cordova-plugin-file
+- cordova-plugin-file-opener2
+- [cordova-plugin-document-viewer](https://github.com/sitewaerts/cordova-plugin-document-viewer)
 
 
 ## References
