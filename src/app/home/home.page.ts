@@ -7,6 +7,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer/ngx';
 
+import { MenuController } from '@ionic/angular';
+
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -28,34 +31,39 @@ export class HomePage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private document: DocumentViewer,
+    private menu: MenuController,
   ) {  }
 
   ngOnInit() {
-    this.folder = '';
-    this.folder = this.route.snapshot.paramMap.get('folder') || '';
-    console.log("passed folder", this.folder);
+    this.folder = "Books";
+    this.folder = this.route.snapshot.paramMap.get('folder') || 'Books';
 
     this.platform.ready().then(() => {
         this.listDir(this.file.externalRootDirectory, this.folder);
       });
   }
 
+
+  openFirst() {
+    this.menu.enable(true, 'first');
+    this.menu.open('first');
+  }
+
   listDir = (path, dirName) => {
     this.file.listDir(path, dirName).then(entries => {
       entries.forEach(r=>{
         const ext = r.name.substring(r.name.length-4);
-        if(r.isFile && (ext == ".pdf" || ext == ".PDF")){
-          console.log(r.name)
-          this.items.push(r);
-        }
-        if(r.isDirectory){
+        // if(r.isFile && (ext == ".pdf" || ext == ".PDF")){
+        //   this.items.push(r);
+        // }
+        // if(r.isDirectory){
           
-          this.items.push(r);
-          console.log(r);
-        }
+        //   this.items.push(r);
+        // }
+        this.items.push(r);
       })
-        // this.items = entries;
-      })
+      this.items.sort((a,b)=> b.isDirectory - a.isDirectory)
+    })
   }
 
   itemClicked(file: Entry) {
@@ -76,7 +84,7 @@ export class HomePage implements OnInit {
   }
 
   startCopy(){
-
+    
   }
 
 }

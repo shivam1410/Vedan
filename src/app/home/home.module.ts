@@ -10,6 +10,8 @@ import { File } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
+import { MenuController } from '@ionic/angular';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -26,7 +28,7 @@ import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
     File,
     FileOpener,
     FileTransfer,  FileTransferObject,
-    DocumentViewer
+    DocumentViewer,MenuController
   ],
   declarations: [HomePage]
 })
