@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { File, Entry } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { AlertController, ToastController, Platform} from '@ionic/angular'
+import { AlertController, ToastController, Platform, Events} from '@ionic/angular'
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer/ngx';
 
 import { MenuController } from '@ionic/angular';
+import { PopoverController } from '@ionic/angular';
+import {  PopoverComponent } from '../home/popover/popover.component'
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -22,6 +25,7 @@ export class HomePage implements OnInit {
   folder = '';
   directories = [];
   items = [];
+  nightmode:boolean = false;
   constructor(
     private file: File,
     private fileOpener:FileOpener,
@@ -32,7 +36,16 @@ export class HomePage implements OnInit {
     private route: ActivatedRoute,
     private document: DocumentViewer,
     private menu: MenuController,
-  ) {  }
+    private statusBar: StatusBar,
+    public popoverController: PopoverController,
+    private events: Events,
+  ) {
+      // this.statusBar.overlaysWebView(true);
+      this.statusBar.overlaysWebView(false);
+      this.statusBar.backgroundColorByHexString('#3700B3')
+    }
+
+  
 
   ngOnInit() {
     this.folder = "Books";
@@ -41,6 +54,7 @@ export class HomePage implements OnInit {
     this.platform.ready().then(() => {
         this.listDir(this.file.externalRootDirectory, this.folder);
       });
+
   }
 
 
@@ -53,13 +67,6 @@ export class HomePage implements OnInit {
     this.file.listDir(path, dirName).then(entries => {
       entries.forEach(r=>{
         const ext = r.name.substring(r.name.length-4);
-        // if(r.isFile && (ext == ".pdf" || ext == ".PDF")){
-        //   this.items.push(r);
-        // }
-        // if(r.isDirectory){
-          
-        //   this.items.push(r);
-        // }
         this.items.push(r);
       })
       this.items.sort((a,b)=> b.isDirectory - a.isDirectory)
@@ -72,7 +79,6 @@ export class HomePage implements OnInit {
         title: file.name
       }
       this.document.viewDocument(file.nativeURL, 'application/pdf', options);
-      // this.fileOpener.open(file.nativeURL, 'text/plain');
     }
     else {
       let path = this.folder != '' ? this.folder + '/' + file.name : file.name;
@@ -85,6 +91,24 @@ export class HomePage implements OnInit {
 
   startCopy(){
     
+  }
+
+  async presentPopover(ev: any) {
+    const popover = await this.popoverController.create({
+      component: PopoverComponent,
+      event: ev,
+      translucent: false,
+      componentProps: {nightmode:this.nightmode}
+    });
+    
+    this.events.subscribe('nightmodechanged',()=>{
+      popover.onDidDismiss().then((data)=>{
+        console.log('event data', data)
+        this.nightmode = data.data;
+      })
+    })
+
+    return await popover.present();
   }
 
 }

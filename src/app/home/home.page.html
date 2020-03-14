@@ -1,18 +1,18 @@
 
 <ion-menu side="start" menuId="first" contentId="main" class="my-custom-menu">
   <ion-header>
-    <ion-toolbar color="primary">
+    <ion-toolbar color="tertiary">
       <ion-title>PDF Viewer</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
     <ion-list>
       <ion-item>Home</ion-item>
-      
-      <ion-item>Menu Item</ion-item>
-      <ion-item>Menu Item</ion-item>
-      <ion-item>Menu Item</ion-item>
-      <ion-item>Menu Item</ion-item>
+      <ion-list>
+        <ion-item>Internal storage</ion-item>
+        <ion-item>MicroSd</ion-item>
+      </ion-list>
+      <ion-item>Network storage</ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
@@ -21,13 +21,13 @@
 
 
 <ion-header class="header">
-  <ion-toolbar color="primary">
+  <ion-toolbar color="tertiary">
     <ion-icon class="menu-button" slot="start" name="menu" (click)="openFirst()"></ion-icon>
       <ion-back-button slot="start" *ngIf="folder != 'Books'"></ion-back-button>
     <ion-title>
       {{ folder }}
     </ion-title>
-    <ion-icon class="option-button" slot="end" name="more"></ion-icon>
+    <ion-icon class="option-button" slot="end" name="more" (click)="presentPopover($event)"></ion-icon>
   </ion-toolbar>
 </ion-header>
 

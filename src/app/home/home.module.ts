@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, PopoverController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -11,7 +11,8 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
 import { MenuController } from '@ionic/angular';
-
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { PopoverComponent } from './popover/popover.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -28,8 +29,9 @@ import { MenuController } from '@ionic/angular';
     File,
     FileOpener,
     FileTransfer,  FileTransferObject,
-    DocumentViewer,MenuController
+    DocumentViewer,MenuController,StatusBar,PopoverController
   ],
-  declarations: [HomePage]
+  declarations: [HomePage,PopoverComponent],
+  entryComponents: [PopoverComponent]
 })
 export class HomePageModule {}
