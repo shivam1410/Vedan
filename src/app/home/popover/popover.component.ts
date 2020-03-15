@@ -25,12 +25,17 @@ export class PopoverComponent {
         this.popoverController.dismiss(str);
     }
 
-    changenighMode(){
+    changenighMode(nightmode){
         console.log(this.nightmode);
         this.events.publish('nightmodechanged');
-        this.popoverController.dismiss(this.nightmode);
+        this.popoverController.dismiss(nightmode);
     }
 
     close(){
+    }
+
+    createshelf(){
+        this.events.publish("createNewShelf");
+        this.popoverController.dismiss();
     }
 }

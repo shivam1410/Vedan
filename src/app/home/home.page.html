@@ -25,9 +25,9 @@
     <ion-icon class="menu-button" slot="start" name="menu" (click)="openFirst()"></ion-icon>
       <ion-back-button slot="start" *ngIf="folder != 'Books'"></ion-back-button>
     <ion-title>
-      {{ folder }}
+      {{ folder || 'Home'}}
     </ion-title>
-    <ion-icon class="option-button" slot="end" name="more" (click)="presentPopover($event)"></ion-icon>
+    <ion-icon class="option-button" slot="end" name="more" (click)="optionsPopover($event)"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -54,10 +54,10 @@
     </ion-item-options>
 
     <ion-item-options side="end">
-      <ion-item-option (click)="startCopy(f)" color="success">
-       Copy
+      <ion-item-option (click)="copyItem($event, f)" color="success">
+        Copy
       </ion-item-option>
-      <ion-item-option (click)="startCopy(f,true)" color="primary">
+      <ion-item-option (click)="copyItem($event, f, true)" color="primary">
         Move
       </ion-item-option>
     </ion-item-options>

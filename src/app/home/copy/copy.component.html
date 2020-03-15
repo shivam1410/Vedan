@@ -1,0 +1,15 @@
+<ion-list>
+  <ion-buttons slot="start">
+    <ion-back-button></ion-back-button>
+  </ion-buttons>
+  <ion-button slot="end" (click)="finishCopyFile()">paste</ion-button>
+
+  <ion-item  *ngFor="let f of items">
+   <ion-item *ngIf="f.isDirectory" (click)="itemClicked(f)">
+     <ion-icon name="folder" slot="start" *ngIf="f.isDirectory"></ion-icon>
+     <ion-label style="font-weight:bold;">
+       {{f.name}}
+     </ion-label>
+   </ion-item>
+  </ion-item>
+</ion-list>

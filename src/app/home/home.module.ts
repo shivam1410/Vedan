@@ -13,17 +13,18 @@ import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
 import { MenuController } from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { PopoverComponent } from './popover/popover.component';
+import { CopyComponent } from './copy/copy.component';
+import { CreateShelfComponent } from './create-shelf/create-shelf.component';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild([
-      {
-        path: '',
-        component: HomePage
-      }
-    ])
+      { path: '', component: HomePage},
+      {path: 'copy', component: CopyComponent},
+      {path: 'copy/:folder', component: CopyComponent}
+    ]),
   ],
   providers: [
     File,
@@ -31,7 +32,7 @@ import { PopoverComponent } from './popover/popover.component';
     FileTransfer,  FileTransferObject,
     DocumentViewer,MenuController,StatusBar,PopoverController
   ],
-  declarations: [HomePage,PopoverComponent],
-  entryComponents: [PopoverComponent]
+  declarations: [HomePage,PopoverComponent,CopyComponent,CreateShelfComponent],
+  entryComponents: [PopoverComponent,CopyComponent,CreateShelfComponent]
 })
 export class HomePageModule {}

@@ -1,39 +1,34 @@
 <ion-list radio-group [(ngModel)]="fontFamily" (ionChange)="changeFontFamily()" class="popover-page">
-    <ion-item (click)="changenighMode(nightmode)">
-        <ion-label>Night Mode</ion-label>
-        <ion-toggle color="tertiary" [(ngModel)]="nightmode"></ion-toggle>
+    <ion-item >
+        <!-- <ion-label>Night Mode</ion-label>
+        <ion-toggle color="tertiary" [(ngModel)]="nightmode"></ion-toggle> -->
+        <ion-grid>
+            <ion-row class="row-dots">
+                <ion-col>
+                  <button ion-button="dot" (click)="changenighMode('false')" class="dot dot-tan" [class.selected]="background == 'tan'"></button>
+                </ion-col>
+                <ion-col>
+                  <button ion-button="dot" (click)="changenighMode('true')" class="dot dot-black" [class.selected]="background == 'black'"></button>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
     </ion-item>
     <ion-grid>
         <ion-row class="row">
             <ion-col class="col">
-                <!-- <div>A</div> -->
                 <ion-button (click)="changeFontSize('smaller')" class="text-button text-smaller" >
                     <ion-label>-A</ion-label>
                 </ion-button>
             </ion-col>
             <ion-col class="col">
-                <!-- <div>A</div> -->
                 <ion-button (click)="changeFontSize('larger')" class="text-button text-larger">
                     <ion-label>+A</ion-label>
                 </ion-button>
             </ion-col>
         </ion-row>
     </ion-grid>
-    <ion-grid>
-        <ion-row class="row-dots">
-            <ion-col>
-              <button ion-button="dot" (click)="changeBackground('white')" class="dot dot-white" [class.selected]="background == 'white'"></button>
-            </ion-col>
-            <ion-col>
-              <button ion-button="dot" (click)="changeBackground('tan')" class="dot dot-tan" [class.selected]="background == 'tan'"></button>
-            </ion-col>
-            <ion-col>
-              <button ion-button="dot" (click)="changeBackground('grey')" class="dot dot-grey" [class.selected]="background == 'grey'"></button>
-            </ion-col>
-            <ion-col>
-              <button ion-button="dot" (click)="changeBackground('black')" class="dot dot-black" [class.selected]="background == 'black'"></button>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+    <ion-item (click)="createshelf()">
+        <ion-label>Create New Shelf</ion-label>
+    </ion-item>
     
   </ion-list>

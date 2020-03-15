@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { File, Entry } from '@ionic-native/file/ngx';
-import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { AlertController, ToastController, Platform, Events} from '@ionic/angular'
 import { ActivatedRoute, Router } from '@angular/router';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer/ngx';
 
 import { MenuController } from '@ionic/angular';
 import { PopoverController } from '@ionic/angular';
 import {  PopoverComponent } from '../home/popover/popover.component'
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { CopyComponent } from './copy/copy.component';
+import { CreateShelfComponent } from './create-shelf/create-shelf.component';
 
 
 @Component({
@@ -21,16 +20,17 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 export class HomePage implements OnInit {
 
   copyFile = null;
-  shouldMovie = false;
+  shouldMove = false;
   folder = '';
   directories = [];
   items = [];
   nightmode:boolean = false;
+  baseFS : string= '';
+  currentFolder: string = '';
   constructor(
     private file: File,
-    private fileOpener:FileOpener,
-    private alertCtrl:AlertController,
-    private Toast:ToastController, 
+    private Toast:ToastController,
+    private alertctrl:AlertController,
     private platform:Platform,
     private router: Router,
     private route: ActivatedRoute,
@@ -40,35 +40,50 @@ export class HomePage implements OnInit {
     public popoverController: PopoverController,
     private events: Events,
   ) {
-      // this.statusBar.overlaysWebView(true);
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#3700B3')
     }
 
-  
-
   ngOnInit() {
+    this.baseFS = this.file.externalRootDirectory;
+
     this.folder = "Books";
     this.folder = this.route.snapshot.paramMap.get('folder') || 'Books';
-
     this.platform.ready().then(() => {
-        this.listDir(this.file.externalRootDirectory, this.folder);
-      });
-
+        this.listDir();
+      })
+      .catch(e=>{
+        console.log("Platform Not Ready");
+      })
   }
-
 
   openFirst() {
     this.menu.enable(true, 'first');
     this.menu.open('first');
   }
 
-  listDir = (path, dirName) => {
-    this.file.listDir(path, dirName).then(entries => {
-      entries.forEach(r=>{
-        const ext = r.name.substring(r.name.length-4);
-        this.items.push(r);
+  async optionsPopover(ev: any) {
+    const popover = await this.popoverController.create({
+      component: PopoverComponent,
+      event: ev,
+      translucent: false,
+      componentProps: {nightmode:this.nightmode}
+    });
+    
+    this.events.subscribe('nightmodechanged',()=>{
+      popover.onDidDismiss().then((data)=>{
+        this.nightmode = data.data;
       })
+    })
+    this.events.subscribe('createNewShelf',()=>{
+      this.createNewShelf();
+    })
+    return await popover.present();
+      }
+
+  listDir() {
+    this.file.listDir(this.baseFS, this.folder).then(entries => {
+      this.items = entries;
       this.items.sort((a,b)=> b.isDirectory - a.isDirectory)
     })
   }
@@ -84,31 +99,104 @@ export class HomePage implements OnInit {
       let path = this.folder != '' ? this.folder + '/' + file.name : file.name;
       let folder =  encodeURIComponent(path);
 
-      console.log("move to ", folder)
       this.router.navigateByUrl(`/home/${folder}`)
     }
   }
 
-  startCopy(){
+  async copyItem(ev,file, moveFile = false){
+    this.copyFile = file;
     
-  }
-
-  async presentPopover(ev: any) {
     const popover = await this.popoverController.create({
-      component: PopoverComponent,
+      component: CopyComponent,
       event: ev,
       translucent: false,
-      componentProps: {nightmode:this.nightmode}
+      cssClass: 'custom-popover',
+      componentProps: {
+        baseFS:this.baseFS
+      }
     });
     
-    this.events.subscribe('nightmodechanged',()=>{
-      popover.onDidDismiss().then((data)=>{
-        console.log('event data', data)
-        this.nightmode = data.data;
+    this.events.subscribe('filecopied',()=>{
+      popover.onDidDismiss().then(data=>{
+        console.log(data)
+        this.debugCopying(file,data.data,moveFile);
       })
     })
-
     return await popover.present();
+  }
+
+
+  deleteItem(){
+
+  }
+
+  async createNewShelf(){
+    const popover = await this.popoverController.create({
+      component: CreateShelfComponent,
+      translucent: false,
+    });
+    
+    this.events.subscribe('shelfAdded',()=>{
+      popover.onDidDismiss().then((data)=>{
+        
+        const shelfName = data.data;
+        const path = this.baseFS + this.folder;
+        this.file.createDir(path,shelfName,false)
+        .then(()=>{
+          this.listDir();
+        })
+        .catch(e=>{
+          console.log("Error in creating DIrectory");
+        })
+      })
+    })
+    return await popover.present();
+  }
+
+  debugCopying(copyFile,newpath,shouldMove) {
+
+    const path = this.baseFS + this.folder + '/';
+    
+    // const newpath = this.baseFS + this.folder +'/herb it/';
+
+      if(shouldMove) {
+        if(copyFile.isDirectory){
+          this.file.moveDir(path,copyFile.name,newpath,'')
+          .then(()=>{
+            this.listDir()
+          })
+          .catch(e =>{
+            console.log(e.message);
+          });
+        } else {
+          this.file.moveFile(path,copyFile.name,newpath,'')
+          .then(()=>{
+            this.listDir()
+          })
+          .catch(e =>{
+            console.log(e.message);
+          });
+        }
+      } else {
+        if(copyFile.isDirectory){
+          this.file.copyDir(path,copyFile.name,newpath,'')
+          .then(()=>{
+            this.listDir()
+          })
+          .catch(e =>{
+            console.log(e.message);
+          });
+        } else {
+          this.file.copyFile(path,copyFile.name,newpath,'')
+          .then(()=>{
+            this.listDir()
+          })
+          .catch(e =>{
+            console.log(e.message);
+          });
+        }
+      }
+
   }
 
 }
