@@ -1,0 +1,40 @@
+
+.dialog-header{
+    ion-label{
+        // padding: 20px;
+        display: flex;
+        align-items: center;
+        margin: 20px;
+        font-size: 25px;
+    }
+}
+.dialog-content{
+    padding: 0;
+    ion-label{
+        padding: 0px;
+    }
+    ion-icon{
+        margin-right: 16px;
+    }
+    ion-icon{
+        // font-size: 32px;
+    }
+}
+.footer{
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    ion-grid{
+        padding: 0;
+        ion-col{
+            padding: 0;
+        }
+    }
+    ion-button{
+            --background: var(--ion-color-tertiary);
+            margin: 0;
+            ion-label{
+                padding: 5px;
+            }
+    }
+}

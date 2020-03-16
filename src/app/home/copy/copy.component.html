@@ -1,15 +1,32 @@
-<ion-list>
-  <ion-buttons slot="start">
-    <ion-back-button></ion-back-button>
-  </ion-buttons>
-  <ion-button slot="end" (click)="finishCopyFile()">paste</ion-button>
-
-  <ion-item  *ngFor="let f of items">
+<div class="dialog-header">
+  <ion-label *ngIf="!shouldmove">Copy to</ion-label>  
+  <ion-label *ngIf="shouldmove">Move to</ion-label>
+</div>
+<ion-list class="dialog-content">
+  <div  *ngFor="let f of items">
    <ion-item *ngIf="f.isDirectory" (click)="itemClicked(f)">
      <ion-icon name="folder" slot="start" *ngIf="f.isDirectory"></ion-icon>
      <ion-label style="font-weight:bold;">
        {{f.name}}
      </ion-label>
    </ion-item>
-  </ion-item>
+  </div>
 </ion-list>
+<div class="footer">
+  <ion-grid class="buttons">
+    <ion-row>
+      <ion-col>
+        <ion-button class="paste-button" expand="full" (click)="finishCopyFile()">
+          <ion-label>Keep Here</ion-label>
+        </ion-button>      
+      </ion-col>
+      <ion-col class="cancel">
+        <ion-button expand="full" (click)="close()">
+          <ion-label>cancel</ion-label>
+        </ion-button>      
+      </ion-col>
+    </ion-row>
+  </ion-grid> 
+</div>
+
+<!-- <ion-button expand="full">Full Button</ion-button> -->

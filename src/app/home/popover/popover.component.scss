@@ -1,4 +1,6 @@
 .popover-page {
+    justify-content: center;
+    align-items: center;
     .text-to-change div {
       margin: 10px auto;
     }
@@ -47,14 +49,6 @@
         background-color: rgb(255,255,255);
       }
     
-      .dot-tan {
-        background-color: rgb(249,241,228);
-      }
-    
-      .dot-grey {
-        background-color: rgb(76,75,80);
-      }
-    
       .dot-black {
         background-color: rgb(0,0,0);
       }
@@ -63,4 +57,9 @@
         border-width: 2px;
         border-color: #327eff;
       }
-    }
+      ion-buttons{
+        height: 40px;
+        padding: 5px 0px 0px 15px;
+      }
+
+}

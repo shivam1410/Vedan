@@ -1,0 +1,24 @@
+.dialog-header{
+    ion-label{
+        display: flex;
+        align-items: center;
+        margin: 20px;
+        font-size: 25px;
+    }
+}
+
+ion-item {
+    margin: 0px 10px 10px 10px;
+    --highlight-color-valid: var(--ion-status-bar) !important;
+    --border-color: var(--ion-color-tertiary);
+}
+ion-grid{
+    padding: 0;
+    ion-col{
+        padding: 0;
+    }
+}
+ion-button{
+        --background: var(--ion-color-tertiary);
+        margin: 0;
+}

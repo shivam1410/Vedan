@@ -77,7 +77,9 @@ export class HomePage implements OnInit {
       })
     })
     this.events.subscribe('createNewShelf',()=>{
-      this.createNewShelf();
+      popover.onDidDismiss().then(()=>{
+        this.createNewShelf();
+      })
     })
     return await popover.present();
       }
@@ -104,33 +106,6 @@ export class HomePage implements OnInit {
     }
   }
 
-  async copyItem(ev,file, moveFile = false){
-    this.copyFile = file;
-    
-    const popover = await this.popoverController.create({
-      component: CopyComponent,
-      event: ev,
-      translucent: false,
-      cssClass: 'custom-popover',
-      componentProps: {
-        baseFS:this.baseFS
-      }
-    });
-    
-    this.events.subscribe('filecopied',()=>{
-      popover.onDidDismiss().then(data=>{
-        console.log(data)
-        this.debugCopying(file,data.data,moveFile);
-      })
-    })
-    return await popover.present();
-  }
-
-
-  deleteItem(){
-
-  }
-
   async createNewShelf(){
     const popover = await this.popoverController.create({
       component: CreateShelfComponent,
@@ -149,6 +124,31 @@ export class HomePage implements OnInit {
         .catch(e=>{
           console.log("Error in creating DIrectory");
         })
+      })
+    })
+    popover.onDidDismiss().then(()=>{
+      console.log("createshelf dismissed")
+    })
+    return await popover.present();
+  }
+  
+  async copyItem(ev,file, moveFile = false){
+    this.copyFile = file;
+    
+    const popover = await this.popoverController.create({
+      component: CopyComponent,
+      event: ev,
+      translucent: false,
+      cssClass: 'custom-popover',
+      componentProps: {
+        baseFS:this.baseFS
+      }
+    });
+    
+    this.events.subscribe('filecopied',()=>{
+      popover.onDidDismiss().then(data=>{
+        console.log(data)
+        this.debugCopying(file,data.data,moveFile);
       })
     })
     return await popover.present();
@@ -193,9 +193,8 @@ export class HomePage implements OnInit {
           .catch(e =>{
             console.log(e.message);
           });
-        }
       }
-
+    }
   }
 
 }

@@ -31,9 +31,6 @@ export class PopoverComponent {
         this.popoverController.dismiss(nightmode);
     }
 
-    close(){
-    }
-
     createshelf(){
         this.events.publish("createNewShelf");
         this.popoverController.dismiss();

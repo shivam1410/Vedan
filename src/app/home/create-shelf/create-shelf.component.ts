@@ -4,27 +4,25 @@ import { PopoverController, NavParams, Events } from '@ionic/angular';
 
 @Component({
     selector: 'create-shelf',
-    template: `
-    <ion-list>
-        <ion-item>
-            <ion-label> Name of Shelf</ion-label>
-        </ion-item>
-        <ion-item>
-            <ion-input [(ngModel)]="shelfName"></ion-input>
-        </ion-item>
-        <ion-button (click)="createShelf()">Add</ion-button>
-    </ion-list>`
+    templateUrl: `./create-shelf.component.html`,
+    styleUrls: [`./create-shelf.component.scss`]
 })
 export class CreateShelfComponent {
-    shelfName: string;
+
+    shelfName: string = '';
     constructor(
         private popoverController: PopoverController,
         public navParams:NavParams,
         private events: Events,
-    ) {}
+    ) {
+        console.log("create shelf")
+    }
 
     createShelf() {
         this.events.publish("shelfAdded");
         this.popoverController.dismiss(this.shelfName);
+    }
+    close(){
+        this.popoverController.dismiss();
     }
 }

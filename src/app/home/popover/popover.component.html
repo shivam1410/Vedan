@@ -1,7 +1,5 @@
 <ion-list radio-group [(ngModel)]="fontFamily" (ionChange)="changeFontFamily()" class="popover-page">
     <ion-item >
-        <!-- <ion-label>Night Mode</ion-label>
-        <ion-toggle color="tertiary" [(ngModel)]="nightmode"></ion-toggle> -->
         <ion-grid>
             <ion-row class="row-dots">
                 <ion-col>
@@ -29,10 +27,7 @@
             </ion-row>
         </ion-grid>
     </ion-item>
-    <ion-item (click)="createshelf()">
-        <ion-buttons>
-            <ion-label>Create New Shelf</ion-label>
-        </ion-buttons>
-    </ion-item>
-    
+    <ion-buttons (click)="createshelf()">
+        <ion-label>Create New Shelf</ion-label>
+    </ion-buttons>
   </ion-list>

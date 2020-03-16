@@ -24,7 +24,7 @@ export class CopyComponent {
 
   ) {
         this.baseFS = this.navParams.get("baseFS");
-        this.folder = "";
+        this.folder = "Books";
         this.listDir();
    }
 
@@ -53,5 +53,9 @@ export class CopyComponent {
     const path = this.baseFS + this.folder + '/';
     this.events.publish("filecopied");
     this.popovercontroller.dismiss(path);
+  }
+
+  close(){
+    this.popovercontroller.dismiss();
   }
 }
