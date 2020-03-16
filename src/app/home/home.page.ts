@@ -67,7 +67,8 @@ export class HomePage implements OnInit {
       component: PopoverComponent,
       event: ev,
       translucent: false,
-      componentProps: {nightmode:this.nightmode}
+      componentProps: {nightmode:this.nightmode},
+      cssClass: 'option-popover'
     });
     
     this.events.subscribe('nightmodechanged',()=>{
@@ -157,8 +158,6 @@ export class HomePage implements OnInit {
 
     const path = this.baseFS + this.folder + '/';
     
-    // const newpath = this.baseFS + this.folder +'/herb it/';
-
       if(shouldMove) {
         if(copyFile.isDirectory){
           this.file.moveDir(path,copyFile.name,newpath,'')

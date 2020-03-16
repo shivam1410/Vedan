@@ -13,22 +13,26 @@
             </ion-row>
         </ion-grid>
     </ion-item>
-    <ion-grid>
-        <ion-row class="row">
-            <ion-col class="col">
-                <ion-button (click)="changeFontSize('smaller')" class="text-button text-smaller" >
-                    <ion-label>-A</ion-label>
-                </ion-button>
-            </ion-col>
-            <ion-col class="col">
-                <ion-button (click)="changeFontSize('larger')" class="text-button text-larger">
-                    <ion-label>+A</ion-label>
-                </ion-button>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+    <ion-item>
+        <ion-grid>
+            <ion-row class="row">
+                <ion-col class="col">
+                    <ion-buttons (click)="changeFontSize('smaller')" class="justify-content-center text-button text-smaller" >
+                        <ion-label>-A</ion-label>
+                    </ion-buttons>
+                </ion-col>
+                <ion-col class="col">
+                    <ion-buttons (click)="changeFontSize('larger')" class="text-button text-larger">
+                        <ion-label>+A</ion-label>
+                    </ion-buttons>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-item>
     <ion-item (click)="createshelf()">
-        <ion-label>Create New Shelf</ion-label>
+        <ion-buttons>
+            <ion-label>Create New Shelf</ion-label>
+        </ion-buttons>
     </ion-item>
     
   </ion-list>
