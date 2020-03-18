@@ -9,6 +9,7 @@ import { PopoverController } from '@ionic/angular';
 import {  PopoverComponent } from '../home/popover/popover.component'
 import { CopyComponent } from './copy/copy.component';
 import { CreateShelfComponent } from './create-shelf/create-shelf.component';
+import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class HomePage implements OnInit {
   nightmode:boolean = false;
   baseFS : string= '';
   currentFolder: string = '';
+  location: string = '';
   constructor(
     private file: File,
     private Toast:ToastController,
@@ -37,31 +39,57 @@ export class HomePage implements OnInit {
     private menu: MenuController,
     public popoverController: PopoverController,
     private events: Events,
+    private diagnostic: Diagnostic,
   ) {
+     
     }
 
   ngOnInit() {
-    this.baseFS = this.file.externalRootDirectory;
-
-    this.folder = "Books";
+    this.baseFS = this.route.snapshot.paramMap.get('baseFS') || this.file.externalRootDirectory;
     this.folder = this.route.snapshot.paramMap.get('folder') || 'Books';
+    this.location = this.route.snapshot.paramMap.get('location') || 'home';
     this.platform.ready().then(() => {
         this.listDir();
       })
       .catch(e=>{
         console.log("Platform Not Ready");
-      })
-      
+      })   
   }
-  setDirectory(fol){
-    this.folder = fol;
-    this.menu.close();
+  sdCard(){
+    this.diagnostic.getExternalSdCardDetails()
+    .then(data => {
+      const path = data[0].filePath;
+      this.baseFS = path;
+      // this.file.listDir("file:///storage/881C-0913","./").then(entries => {
+      //   console.log(entries)
+      // })
+      this.folder='.';
+      this.listDir();
+      this.location = "sdCard";
+      this.menu.close();
+    })
+    .catch(e=> console.error(e))
+  }
+  setDirectory(root){
+    this.baseFS = this.file.externalRootDirectory;
+    this.folder = root;
     this.listDir();
+    this.menu.close();
+    if(root){
+      this.location = 'home';
+    } else {
+      this.location = 'internal'
+    }
   }
-
+  network(){
+    this.location = 'network'
+    this.menu.close();
+  }
   openFirst() {
-    this.menu.enable(true, 'first');
-    this.menu.open('first');
+    console.log("menu called")
+    console.log(this.folder)
+    this.menu.enable(true);
+    this.menu.open();
   }
 
   async optionsPopover(ev: any) {
@@ -88,6 +116,7 @@ export class HomePage implements OnInit {
       }
 
   listDir() {
+    console.log(this.baseFS)
     this.file.listDir(this.baseFS, this.folder).then(entries => {
       this.items = entries;
       this.items.sort((a,b)=> b.isDirectory - a.isDirectory)
@@ -104,8 +133,13 @@ export class HomePage implements OnInit {
     else {
       let path = this.folder != '' ? this.folder + '/' + file.name : file.name;
       let folder =  encodeURIComponent(path);
-
-      this.router.navigateByUrl(`/home/${folder}`)
+      let baseFS = this.baseFS;
+      
+      this.router.navigate(['.',{
+        folder:path,
+        baseFS:baseFS,
+        location: this.location
+      }])
     }
   }
 

@@ -15,6 +15,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { PopoverComponent } from './popover/popover.component';
 import { CopyComponent } from './copy/copy.component';
 import { CreateShelfComponent } from './create-shelf/create-shelf.component';
+import { Diagnostic } from '@ionic-native/diagnostic/ngx';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -30,7 +32,8 @@ import { CreateShelfComponent } from './create-shelf/create-shelf.component';
     File,
     FileOpener,
     FileTransfer,  FileTransferObject,
-    DocumentViewer,MenuController,StatusBar,PopoverController
+    DocumentViewer,MenuController,StatusBar,PopoverController,
+    Diagnostic
   ],
   declarations: [HomePage,PopoverComponent,CopyComponent,CreateShelfComponent],
   entryComponents: [PopoverComponent,CopyComponent,CreateShelfComponent]
