@@ -7,11 +7,19 @@
   </ion-header>
   <ion-content>
     <ion-list>
-      <ion-item>Home</ion-item>
-      <ion-list>
-        <ion-item>Internal storage</ion-item>
-        <ion-item>MicroSd</ion-item>
-      </ion-list>
+      <ion-item [ngClass]="{'fs-selected' : this.folder == 'Books'}" (click)="setDirectory('Books')">
+        <ion-icon name="home" slot="start"></ion-icon>
+        <ion-label>
+          Home
+        </ion-label>
+      </ion-item>
+      <div class="menu-heading">Browse From</div>
+      <ion-item [ngClass]="{'fs-selected' : this.folder == ''}" (click)="setDirectory('')">
+        <ion-icon name="disc" slot="start"></ion-icon>
+        <ion-label>
+          Internal storage
+        </ion-label></ion-item>
+      <ion-item>MicroSd</ion-item>
       <ion-item>Network storage</ion-item>
     </ion-list>
   </ion-content>

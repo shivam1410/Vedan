@@ -1,6 +1,19 @@
 
 .my-custom-menu {
     --width: 250px;
+    ion-list{
+        .fs-selected{
+            --background: var(--ion-status-bar);
+            --color: #ffffff;
+            ion-icon{
+                color: white;
+            }
+        }
+        .menu-heading{
+            padding: 16px;
+        }
+    }
+    
   }
 .header{
     .menu-button{

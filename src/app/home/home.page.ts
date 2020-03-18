@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { File, Entry } from '@ionic-native/file/ngx';
 import { AlertController, ToastController, Platform, Events} from '@ionic/angular'
 import { ActivatedRoute, Router } from '@angular/router';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer/ngx';
 
 import { MenuController } from '@ionic/angular';
@@ -36,12 +35,9 @@ export class HomePage implements OnInit {
     private route: ActivatedRoute,
     private document: DocumentViewer,
     private menu: MenuController,
-    private statusBar: StatusBar,
     public popoverController: PopoverController,
     private events: Events,
   ) {
-      this.statusBar.overlaysWebView(false);
-      this.statusBar.backgroundColorByHexString('#3700B3')
     }
 
   ngOnInit() {
@@ -55,6 +51,12 @@ export class HomePage implements OnInit {
       .catch(e=>{
         console.log("Platform Not Ready");
       })
+      
+  }
+  setDirectory(fol){
+    this.folder = fol;
+    this.menu.close();
+    this.listDir();
   }
 
   openFirst() {
@@ -74,6 +76,7 @@ export class HomePage implements OnInit {
     this.events.subscribe('nightmodechanged',()=>{
       popover.onDidDismiss().then((data)=>{
         this.nightmode = data.data;
+        this.toggleDarkMode(data.data)
       })
     })
     this.events.subscribe('createNewShelf',()=>{
@@ -155,45 +158,74 @@ export class HomePage implements OnInit {
   }
 
   debugCopying(copyFile,newpath,shouldMove) {
-
     const path = this.baseFS + this.folder + '/';
-    
-      if(shouldMove) {
-        if(copyFile.isDirectory){
-          this.file.moveDir(path,copyFile.name,newpath,'')
-          .then(()=>{
-            this.listDir()
-          })
-          .catch(e =>{
-            console.log(e.message);
-          });
-        } else {
-          this.file.moveFile(path,copyFile.name,newpath,'')
-          .then(()=>{
-            this.listDir()
-          })
-          .catch(e =>{
-            console.log(e.message);
-          });
-        }
+
+    if(shouldMove) {
+      if(copyFile.isDirectory){
+        this.file.moveDir(path,copyFile.name,newpath,'')
+        .then(()=>{
+          this.listDir()
+        })
+        .catch(e =>{
+          console.log(e.message);
+        });
       } else {
-        if(copyFile.isDirectory){
-          this.file.copyDir(path,copyFile.name,newpath,'')
-          .then(()=>{
-            this.listDir()
-          })
-          .catch(e =>{
-            console.log(e.message);
-          });
-        } else {
-          this.file.copyFile(path,copyFile.name,newpath,'')
-          .then(()=>{
-            this.listDir()
-          })
-          .catch(e =>{
-            console.log(e.message);
-          });
+        this.file.moveFile(path,copyFile.name,newpath,'')
+        .then(()=>{
+          this.listDir()
+        })
+        .catch(e =>{
+          console.log(e.message);
+        });
       }
+    } else {
+      if(copyFile.isDirectory){
+        this.file.copyDir(path,copyFile.name,newpath,'')
+        .then(()=>{
+          this.listDir()
+        })
+        .catch(e =>{
+          console.log(e.message);
+        });
+      } else {
+        this.file.copyFile(path,copyFile.name,newpath,'')
+        .then(()=>{
+          this.listDir()
+        })
+        .catch(e =>{
+          console.log(e.message);
+        });
+      }
+    }
+  }
+
+  toggleDarkMode(nightmode){
+
+    // // Query for the toggle that is used to change between themes
+    // const toggle = nightmode
+
+    // // Listen for the toggle check/uncheck to toggle the dark class on the <body>
+    // toggle.addEventListener('ionChange', (ev) => {
+    //   document.body.classList.toggle('dark', ev.detail.checked);
+    // });
+
+    // const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+    // // Listen for changes to the prefers-color-scheme media query
+    // prefersDark.addListener((e) => checkToggle(e.matches));
+
+    // // Called when the app loads
+    // function loadApp() {
+    //   checkToggle(prefersDark.matches);
+    // }
+
+    // // Called by the media query to check/uncheck the toggle
+    // function checkToggle(shouldCheck) {
+    //   toggle.checked = shouldCheck;
+    // }
+
+    if(nightmode){
+      
     }
   }
 
