@@ -9,26 +9,29 @@ import { PopoverController, NavParams, Events } from '@ionic/angular';
 })
 export class PopoverComponent {
     nightmode:boolean;
+    hideDirectoryBool:boolean;
     constructor(
         private popoverController: PopoverController,
         public navParams:NavParams,
         private events: Events,
     ) {
-        console.log("popover constructor called")
         this.nightmode = this.navParams.get('nightmode');   
-        console.log("arrival", this.nightmode)
+        this.hideDirectoryBool = this.navParams.get('hideDirectoryBool');
     }
 
     changeFontSize(str){
-        console.log(str);
         this.events.publish('fontchanged');
         this.popoverController.dismiss(str);
     }
 
     changenighMode(nightmode){
-        console.log(this.nightmode);
         this.events.publish('nightmodechanged');
         this.popoverController.dismiss(nightmode);
+    }
+
+    hideDirectory(hideDirectoryBool){
+        this.events.publish('hiddenStateChanged');
+        this.popoverController.dismiss(hideDirectoryBool);
     }
 
     createshelf(){

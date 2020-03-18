@@ -28,9 +28,10 @@ export class HomePage implements OnInit {
   baseFS : string= '';
   currentFolder: string = '';
   location: string = '';
+  hideDirectoryBool: boolean = true;
   constructor(
     private file: File,
-    private Toast:ToastController,
+    private toast:ToastController,
     private alertctrl:AlertController,
     private platform:Platform,
     private router: Router,
@@ -52,7 +53,7 @@ export class HomePage implements OnInit {
         this.listDir();
       })
       .catch(e=>{
-        console.log("Platform Not Ready");
+        console.error("Platform Not Ready");
       })   
   }
   sdCard(){
@@ -60,9 +61,7 @@ export class HomePage implements OnInit {
     .then(data => {
       const path = data[0].filePath;
       this.baseFS = path;
-      // this.file.listDir("file:///storage/881C-0913","./").then(entries => {
-      //   console.log(entries)
-      // })
+
       this.folder='.';
       this.listDir();
       this.location = "sdCard";
@@ -84,9 +83,9 @@ export class HomePage implements OnInit {
   network(){
     this.location = 'network'
     this.menu.close();
+    this.createToast("Network not Created now");
   }
   openFirst() {
-    console.log("menu called")
     console.log(this.folder)
     this.menu.enable(true);
     this.menu.open();
@@ -97,7 +96,10 @@ export class HomePage implements OnInit {
       component: PopoverComponent,
       event: ev,
       translucent: false,
-      componentProps: {nightmode:this.nightmode},
+      componentProps: {
+        nightmode:this.nightmode,
+        hideDirectoryBool: this.hideDirectoryBool
+      },
       cssClass: 'option-popover'
     });
     
@@ -112,13 +114,31 @@ export class HomePage implements OnInit {
         this.createNewShelf();
       })
     })
+    this.events.subscribe('hiddenStateChanged',()=>{
+      popover.onDidDismiss().then(data=>{
+        this.hideDirectoryBool = data.data;
+        this.listDir(data.data);
+      })
+    })
     return await popover.present();
-      }
+  }
 
-  listDir() {
-    console.log(this.baseFS)
+
+  listDir(shouldHide = true) {
+
     this.file.listDir(this.baseFS, this.folder).then(entries => {
-      this.items = entries;
+     
+      if(shouldHide) {
+        this.items = [];
+        entries.forEach(data=>{
+          if(data.name[0] !== '.'){
+            this.items.push(data);
+          }
+        })
+      }
+      else {
+        this.items = entries;
+      }
       this.items.sort((a,b)=> b.isDirectory - a.isDirectory)
     })
   }
@@ -134,7 +154,6 @@ export class HomePage implements OnInit {
       let path = this.folder != '' ? this.folder + '/' + file.name : file.name;
       let folder =  encodeURIComponent(path);
       let baseFS = this.baseFS;
-      
       this.router.navigate(['.',{
         folder:path,
         baseFS:baseFS,
@@ -153,38 +172,36 @@ export class HomePage implements OnInit {
       popover.onDidDismiss().then((data)=>{
         
         const shelfName = data.data;
-        const path = this.baseFS + this.folder;
+        const path = this.baseFS + '/' + this.folder;
         this.file.createDir(path,shelfName,false)
         .then(()=>{
           this.listDir();
+          this.createToast("Shelf Created")
         })
         .catch(e=>{
-          console.log("Error in creating DIrectory");
+          console.error("Error in creating DIrectory");
         })
       })
     })
     popover.onDidDismiss().then(()=>{
-      console.log("createshelf dismissed")
     })
     return await popover.present();
   }
   
   async copyItem(ev,file, moveFile = false){
     this.copyFile = file;
-    
     const popover = await this.popoverController.create({
       component: CopyComponent,
       event: ev,
       translucent: false,
       cssClass: 'custom-popover',
       componentProps: {
-        baseFS:this.baseFS
+        shouldmove: moveFile
       }
     });
     
     this.events.subscribe('filecopied',()=>{
       popover.onDidDismiss().then(data=>{
-        console.log(data)
         this.debugCopying(file,data.data,moveFile);
       })
     })
@@ -192,45 +209,70 @@ export class HomePage implements OnInit {
   }
 
   debugCopying(copyFile,newpath,shouldMove) {
-    const path = this.baseFS + this.folder + '/';
+    const path = this.baseFS + '/' + this.folder + '/';
+    if(path === newpath){
+      if(!shouldMove){
+        this.createToast("Cant Copy to Same Directory");
+      } 
+      else {
+      this.createToast("Cant Move to Same Directory");
 
-    if(shouldMove) {
-      if(copyFile.isDirectory){
-        this.file.moveDir(path,copyFile.name,newpath,'')
-        .then(()=>{
-          this.listDir()
-        })
-        .catch(e =>{
-          console.log(e.message);
-        });
-      } else {
-        this.file.moveFile(path,copyFile.name,newpath,'')
-        .then(()=>{
-          this.listDir()
-        })
-        .catch(e =>{
-          console.log(e.message);
-        });
       }
-    } else {
-      if(copyFile.isDirectory){
-        this.file.copyDir(path,copyFile.name,newpath,'')
-        .then(()=>{
-          this.listDir()
-        })
-        .catch(e =>{
-          console.log(e.message);
-        });
-      } else {
-        this.file.copyFile(path,copyFile.name,newpath,'')
-        .then(()=>{
-          this.listDir()
-        })
-        .catch(e =>{
-          console.log(e.message);
-        });
+    } 
+    else {
+      if(shouldMove) {
+        if(copyFile.isDirectory){
+          this.file.moveDir(path,copyFile.name,newpath,'')
+          .then(()=>{
+            this.listDir()
+            this.createToast("Moved")
+          })
+          .catch(e =>{
+            console.error(e.message);
+          });
+        } 
+        else {
+          this.file.moveFile(path,copyFile.name,newpath,'')
+          .then(()=>{
+            this.listDir()
+            this.createToast("Moved")
+          })
+          .catch(e =>{
+            console.error(e.message);
+          });
+        }
+      } 
+      else {
+        if(copyFile.isDirectory){
+          this.file.copyDir(path,copyFile.name,newpath,'')
+          .then(()=>{
+            this.listDir()
+            this.createToast("Copied")
+          })
+          .catch(e =>{
+            console.error(e.message);
+          });
+        } 
+        else {
+          this.file.copyFile(path,copyFile.name,newpath,'')
+          .then(()=>{
+            this.listDir()
+            this.createToast("Copied")
+          })
+          .catch(e =>{
+            console.error(e.message);
+          });
+        }
       }
     }
+  }
+
+  async createToast(str){
+    const toast = await this.toast.create({
+      message: str,
+      duration: 2000
+    });
+    toast.present();
   }
 
   toggleDarkMode(nightmode){
@@ -262,5 +304,78 @@ export class HomePage implements OnInit {
       
     }
   }
+  openTrash(){
+    this.location = 'trash';
+    this.folder = 'Books/.bin';
+    this.baseFS = this.file.externalRootDirectory;
+    this.listDir(false);
+    this.menu.close();
+  }
+  moveToBin(removeFile: Entry){
+    console.log(removeFile)
+    this.file.createDir(this.baseFS,"Books/.bin",false);
+    const path = this.baseFS + this.folder;
+    const newpath = this.baseFS + '/' + 'Books/.bin';
+    console.log(newpath)
+    if(removeFile.isDirectory){
+      this.file.moveDir(path,removeFile.name,newpath,'')
+      .then(()=>{
+        this.listDir()
+        this.createToast("Shelf Removed")
+      })
+      .catch(e =>{
+        console.log(e.message);
+      });
+    } 
+    else {
+      this.file.moveFile(path,removeFile.name,newpath,'')
+      .then(()=>{
+        this.listDir()
+        this.createToast("book Removed")
+      })
+      .catch(e =>{
+        console.log(e.message);
+      });
+    }
+  }
+
+   deleteFromBin( deleteFile: Entry){
+    const path = this.baseFS + '/' + this.folder;
+    if(deleteFile.isDirectory){
+      this.file.removeRecursively(path,deleteFile.name)
+      .then(()=>{
+        this.listDir();
+      })
+      .catch(e=>{
+        console.log(path,deleteFile.name)
+        
+        console.error(e)
+      })
+    }
+    else {
+      this.file.removeFile(path,deleteFile.name)
+      .then(()=>{
+        this.listDir();
+      })
+      .catch(e=>{
+        console.log(path,deleteFile.name)
+        console.error(e)
+      })
+    }
+   }
+
+   emptyBin(){
+    const path = this.baseFS + '/' + 'Books/';
+    this.file.removeRecursively(path,'.bin')
+    .then(()=>{
+      this.folder = 'Books';
+      this.location = 'home'
+      this.createToast("Trash Cleared")
+      this.listDir();
+    })
+    .catch(e=>{
+      console.error(e)
+    })
+   }
 
 }

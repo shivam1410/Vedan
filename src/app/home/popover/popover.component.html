@@ -25,6 +25,10 @@
         <ion-label>Night</ion-label>
         <ion-toggle color="tertiary" [(ngModel)]="nightmode"></ion-toggle>
     </ion-item>
+    <ion-item (click)="hideDirectory(hideDirectoryBool)">
+        <ion-label>Hide</ion-label>
+        <ion-toggle color="tertiary" [(ngModel)]="hideDirectoryBool"></ion-toggle>
+    </ion-item>
     <ion-item>
         <ion-grid>
             <ion-row class="row">

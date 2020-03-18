@@ -23,7 +23,8 @@ export class CopyComponent {
     private events: Events,
 
   ) {
-        this.baseFS = this.navParams.get("baseFS");
+        this.baseFS = this.file.externalRootDirectory;
+        this.shouldmove = this.navParams.get("shouldmove");
         this.folder = "Books";
         this.listDir();
    }
@@ -50,8 +51,10 @@ export class CopyComponent {
   }
 
   finishCopyFile(){
+
     const path = this.baseFS + this.folder + '/';
     this.events.publish("filecopied");
+
     this.popovercontroller.dismiss(path);
   }
 

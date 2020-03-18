@@ -10,6 +10,10 @@
       padding: 0;
     }
     
+    ion-toggle{
+      --background :var(--ion-color-purple-100);
+      --background-checked :var(--ion-color-purple-800);
+    }
       .text-button {
         padding-left: 0;
         width: 100%;
