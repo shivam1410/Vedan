@@ -1,9 +1,23 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
-
+@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 /** Ionic CSS Variables **/
 :root {
   /** primary **/
+
+  --ion-color-purple-500: #673ab7;
+  --ion-color-purple-50: #ede7f6;
+  --ion-color-purple-100: #d1c4e9;
+  --ion-color-purple-200: #b39ddb;
+  --ion-color-purple-300: #9575cd;
+  --ion-color-purple-400: #7e57c2;
+  --ion-color-purple-500: #673ab7;
+  --ion-color-purple-600: #5e35b1;
+  --ion-color-purple-700: #512da8;
+  --ion-color-purple-800: #4527a0;
+  --ion-color-purple-900: #311b92;
+
+
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
   --ion-color-primary-contrast: #ffffff;
@@ -20,7 +34,7 @@
   --ion-color-secondary-tint: #24d6ea;
 
   /** tertiary **/
-  --ion-color-tertiary: #7044ff;
+  --ion-color-tertiary: #311b92;
   --ion-color-tertiary-rgb: 112, 68, 255;
   --ion-color-tertiary-contrast: #ffffff;
   --ion-color-tertiary-contrast-rgb: 255, 255, 255;
@@ -76,4 +90,29 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  --ion-font-family: 'Ubuntu', monospace !important;
 }
+
+
+
+
+// @media (prefers-color-scheme: light) {
+//   ion-toolbar {
+//     --background: white;
+//     color: black;
+//   }
+//   .verticalScrollContainer {
+//     background: white;
+//   }
+// }
+
+// @media (prefers-color-scheme: dark) {
+//   ion-toolbar {
+//     --background: black;
+//     color: white;
+//   }
+//   .verticalScrollContainer {
+//     background: black;
+//   }
+// }

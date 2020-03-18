@@ -1,7 +1,7 @@
 
 <ion-menu side="start" menuId="first" contentId="main" class="my-custom-menu">
   <ion-header>
-    <ion-toolbar color="tertiary">
+    <ion-toolbar>
       <ion-title>PDF Viewer</ion-title>
     </ion-toolbar>
   </ion-header>
@@ -40,7 +40,7 @@
 
 
 <ion-header class="header">
-  <ion-toolbar color="tertiary">
+  <ion-toolbar>
     <ion-icon class="menu-button" slot="start" name="menu" (click)="openFirst()"></ion-icon>
       <ion-back-button slot="start" *ngIf="folder != 'Books'"></ion-back-button>
     <ion-title *ngIf="folder != '.'">
@@ -61,13 +61,15 @@
  <ion-list>
 
    <ion-item-sliding *ngFor="let f of items" class="list-items">
-    <ion-item (click)="itemClicked(f)">
-      <ion-icon name="folder" slot="start" *ngIf="f.isDirectory"></ion-icon>
-      <ion-icon name="document" slot="start" *ngIf="!f.isDirectory"></ion-icon>
-      <ion-label *ngIf="f.isDirectory" style="font-weight:bold;">
+    <ion-item class="directory" (click)="itemClicked(f)" *ngIf="f.isDirectory">
+      <ion-icon name="folder" slot="start" ></ion-icon>
+      <ion-label >
         {{f.name}}
       </ion-label>
-      <ion-label *ngIf="!f.isDirectory">
+    </ion-item>
+    <ion-item class="file" (click)="itemClicked(f)" *ngIf="!f.isDirectory">
+      <ion-icon name="document" slot="start"></ion-icon>
+      <ion-label>
         {{f.name}}
       </ion-label>
     </ion-item>
@@ -79,10 +81,10 @@
     </ion-item-options>
 
     <ion-item-options side="end">
-      <ion-item-option (click)="copyItem($event, f)" color="success">
+      <ion-item-option class="copy-button" (click)="copyItem($event, f)" >
         <ion-icon name="copy" slot="icon-only"></ion-icon>
       </ion-item-option>
-      <ion-item-option (click)="copyItem($event, f, true)" color="primary">
+      <ion-item-option class="move-button" (click)="copyItem($event, f, true)" >
         <ion-icon name="move" slot="icon-only"></ion-icon>
       </ion-item-option>
     </ion-item-options>

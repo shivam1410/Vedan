@@ -45,10 +45,10 @@ export class HomePage implements OnInit {
     }
 
   ngOnInit() {
-    this.baseFS = this.route.snapshot.paramMap.get('baseFS') || this.file.externalRootDirectory;
-    this.folder = this.route.snapshot.paramMap.get('folder') || 'Books';
-    this.location = this.route.snapshot.paramMap.get('location') || 'home';
     this.platform.ready().then(() => {
+        this.baseFS = this.route.snapshot.paramMap.get('baseFS') || this.file.externalRootDirectory;
+        this.folder = this.route.snapshot.paramMap.get('folder') || 'Books';
+        this.location = this.route.snapshot.paramMap.get('location') || 'home';
         this.listDir();
       })
       .catch(e=>{

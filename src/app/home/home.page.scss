@@ -3,7 +3,7 @@
     --width: 250px;
     ion-list{
         .fs-selected{
-            --background: var(--ion-status-bar);
+            --background: var(--ion-color-purple-900);
             --color: #ffffff;
             ion-icon{
                 color: white;
@@ -14,6 +14,10 @@
         }
     }
     
+  }
+  ion-toolbar{
+      --background: var(--ion-color-purple-600);
+      --color: #ffffff
   }
 .header{
     .menu-button{
@@ -26,6 +30,20 @@
     }
 }
 .list-items{
+    .directory{
+        ion-icon{
+            color: var(--ion-color-purple-300);
+            font-size: 32px;
+        }
+        font-weight:bold;
+    }
+    .file{
+        ion-icon{
+            color: var(--ion-color-purple-900);
+            font-size: 32px;
+        }
+    }
+
     padding: 0;
     ion-label{
         padding: 5px 0px;
@@ -33,8 +51,17 @@
     ion-icon{
         margin-right: 16px;
     }
-    ion-icon{
-        font-size: 32px;
+    ion-item-option{
+        ion-icon{
+            font-size: 24px;
+        }
     }
+}
+.copy-button{
+    --background: var(--ion-color-purple-400);
+
+}
+.move-button{
+    --background: var(--ion-color-purple-300);
 }
   

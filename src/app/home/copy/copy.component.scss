@@ -1,5 +1,6 @@
 
 .dialog-header{
+    color: var(--ion-color-purple-900);
     ion-label{
         // padding: 20px;
         display: flex;
@@ -31,7 +32,7 @@
         }
     }
     ion-button{
-            --background: var(--ion-color-tertiary);
+            --background: var(--ion-color-purple-600);
             margin: 0;
             ion-label{
                 padding: 5px;
