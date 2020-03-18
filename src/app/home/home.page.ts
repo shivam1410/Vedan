@@ -308,6 +308,7 @@ export class HomePage implements OnInit {
     this.location = 'trash';
     this.folder = 'Books/.bin';
     this.baseFS = this.file.externalRootDirectory;
+    this.file.createDir(this.baseFS + '/Books', '.bin', false);
     this.listDir(false);
     this.menu.close();
   }
