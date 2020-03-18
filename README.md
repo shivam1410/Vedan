@@ -13,7 +13,7 @@ follow the Official Documentation of [Ionic](https://ionicframework.com/docs/ins
 - [cordova-plugin-document-viewer](https://github.com/sitewaerts/cordova-plugin-document-viewer)
 
 ## ScreenShots
-![Main Home](https://raw.githubusercontent.com/shivam1410/ionic-PDF/master/src/assets/Screenshot_20200318-152719.jpg)
+![Main Home](https://raw.githubusercontent.com/shivam1410/ionic-PDF/blob/master/src/assets/Screenshot_20200318-152719.jpg)
 ![alt text](https://raw.githubusercontent.com/shivam1410/ionic-PDF/master/src/assets/Screenshot_20200318-152733.jpg)
 ![alt text](https://raw.githubusercontent.com/shivam1410/ionic-PDF/master/src/assets/Screenshot_20200318-152738.jpg)
 ![alt text](https://raw.githubusercontent.com/shivam1410/ionic-PDF/master/src/assets/Screenshot_20200318-182206.jpg)
