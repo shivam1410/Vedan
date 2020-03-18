@@ -61,7 +61,7 @@
     <ion-title *ngIf="location == 'trash'">
       Bin
     </ion-title>
-    <ion-icon *ngIf="folder == 'Books/.bin'" class="bin-button" slot="end" name="trash" (click)="emptyBin()"></ion-icon>
+    <ion-icon *ngIf="location == 'trash' " class="bin-button" slot="end" name="trash" (click)="emptyBin()"></ion-icon>
     <ion-icon class="option-button" slot="end" name="more" (click)="optionsPopover($event)"></ion-icon>
   </ion-toolbar>
 </ion-header>

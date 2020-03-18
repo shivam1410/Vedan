@@ -51,10 +51,25 @@ export class HomePage implements OnInit {
         this.folder = this.route.snapshot.paramMap.get('folder') || 'Books';
         this.location = this.route.snapshot.paramMap.get('location') || 'home';
         this.listDir();
+
+        let counter =0;
+        this.platform.backButton.subscribe(() => {
+          if(counter<2){
+            counter++;
+            if(counter==2){
+              this.createToast("Press 1 more time to exit");
+            }
+            setTimeout(() => { 
+              counter = 0 }, 2000);
+          }else {
+            navigator['app'].exitApp()
+          }
+        })
+              
       })
       .catch(e=>{
         console.error("Platform Not Ready");
-      })   
+      })
   }
   sdCard(){
     this.diagnostic.getExternalSdCardDetails()
@@ -215,8 +230,7 @@ export class HomePage implements OnInit {
         this.createToast("Cant Copy to Same Directory");
       } 
       else {
-      this.createToast("Cant Move to Same Directory");
-
+        this.createToast("Cant Move to Same Directory");
       }
     } 
     else {
@@ -270,7 +284,8 @@ export class HomePage implements OnInit {
   async createToast(str){
     const toast = await this.toast.create({
       message: str,
-      duration: 2000
+      duration: 2000,
+      position: 'middle'
     });
     toast.present();
   }
