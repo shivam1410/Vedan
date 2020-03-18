@@ -20,15 +20,15 @@ creating the apk can be trick part
 ` ionic cordova build android --prod --release` gives you `app-release-unsigned.apk` but `ionic cordova build android --prod` gives you `app-debug.apk`. So you gotta make you unsignes version signed. so that you can install it on your Android.</br>
 
 **These are the few steps for same**</br>
- - **To create the build**
+ - **To create the build**</br>
  `ionic cordova build android --prod --release`
- - **Copy apk file to main folder**
+ - **Copy apk file to main folder**</br>
  `cp platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk app-release-unsigned.apk`
- - **Create your signature**
+ - **Create your signature**</br>
  `keytool -genkey -v -keystore ionic-PDF.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000`
- - **Sign your apk with your signature**
+ - **Sign your apk with your signature**</br>
  `jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ionic-PDF.keystore app-release-unsigned.apk alias_name`
- - **Verify (zipalign can be found in Android/Sdk/build-tools/28.0.3/)**
+ - **Verify (zipalign can be found in Android/Sdk/build-tools/28.0.3/)**</br>
  `zipalign  -v 4 app-release-unsigned.apk ionic-PDF.apk`
 </br>
 
