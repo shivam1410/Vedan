@@ -12,6 +12,15 @@ follow the Official Documentation of [Ionic](https://ionicframework.com/docs/ins
 - cordova-plugin-file-opener2
 - [cordova-plugin-document-viewer](https://github.com/sitewaerts/cordova-plugin-document-viewer)
 
+## ScreenShots
+![alt text](https://raw.githubusercontent.com/shivam1410/ionic-PDF/blob/master/src/assets/Screenshot_20200318-152719.jpg)
+![alt text](https://raw.githubusercontent.com/shivam1410/ionic-PDF/blob/master/src/assets/Screenshot_20200318-152733.jpg)
+![alt text](https://raw.githubusercontent.com/shivam1410/ionic-PDF/blob/master/src/assets/Screenshot_20200318-152738.jpg)
+![alt text](https://raw.githubusercontent.com/shivam1410/ionic-PDF/blob/master/src/assets/Screenshot_20200318-182206.jpg)
+![alt text](https://raw.githubusercontent.com/shivam1410/ionic-PDF/blob/master/src/assets/Screenshot_20200318-182212.jpg)
+![alt text](https://raw.githubusercontent.com/shivam1410/ionic-PDF/blob/master/src/assets/Screenshot_20200318-101604.jpg)
+![alt text](https://raw.githubusercontent.com/shivam1410/ionic-PDF/blob/master/src/assets/Screenshot_20200318-152825.jpg)
+![alt text](https://raw.githubusercontent.com/shivam1410/ionic-PDF/blob/master/src/assets/Screenshot_20200318-182224.jpg)
 
 ## References
 - [Ionic icons](https://ionicframework.com/docs/v3/ionicons/)
