@@ -61,6 +61,24 @@
         }
     }
 }
+.long-press-options{
+    position: fixed;
+    bottom: 30px;
+    left: 12.5%;
+    height: 50px;
+    width: 75%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 30px 10px 25px;
+    border-radius: 30px;
+    font-size: 24px;
+    background: var(--ion-color-purple-50);
+    color: var(--ion-color-purple-400);
+    // z-index: 10;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.30), 0 10px 10px rgba(0,0,0,0.22);
+    
+}
+
 .copy-button{
     --background: var(--ion-color-purple-400);
 

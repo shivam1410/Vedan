@@ -29,6 +29,8 @@ export class HomePage implements OnInit {
   currentFolder: string = '';
   location: string = '';
   hideDirectoryBool: boolean = true;
+  selectedFiles= [];
+  selectedFilesMap = {};
   constructor(
     private file: File,
     private toast:ToastController,
@@ -175,6 +177,23 @@ export class HomePage implements OnInit {
         location: this.location
       }])
     }
+  }
+
+  itemPressed(file,i){
+
+    this.items[i].selected = !this.items[i].selected;
+    if(this.items[i].selected == true){
+      this.selectedFilesMap[i] = file
+    }
+    else {
+      this.selectedFilesMap[i]='';
+    }
+    console.log( this.selectedFilesMap)
+
+  }
+  discardLongPressOptions(){
+    this.selectedFilesMap = {};
+    this.listDir();
   }
 
   async createNewShelf(){
