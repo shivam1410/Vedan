@@ -43,16 +43,30 @@ export class HomePage implements OnInit {
     public popoverController: PopoverController,
     private events: Events,
     private diagnostic: Diagnostic,
-  ) {
-     
-    }
+  ) { }
 
   ngOnInit() {
     this.platform.ready().then(() => {
         this.baseFS = this.route.snapshot.paramMap.get('baseFS') || this.file.externalRootDirectory;
         this.folder = this.route.snapshot.paramMap.get('folder') || 'Books';
+        if(this.folder === ''){
+          this.file.createDir(this.baseFS,'Books',false);
+        }
         this.location = this.route.snapshot.paramMap.get('location') || 'home';
-        this.listDir();
+        if(this.folder == 'Books')
+        {
+          this.file.checkDir(this.baseFS,this.folder)
+          .then(()=>{
+            this.listDir();
+          })
+          .catch(e=>{
+            console.error("creating Books Shelf")
+            this.file.createDir(this.baseFS, this.folder,false)
+          })
+        }
+        else{
+          this.listDir();
+        }
 
         let counter =0;
         this.platform.backButton.subscribe(() => {
@@ -222,7 +236,6 @@ export class HomePage implements OnInit {
   
   copyMultiple(ev,moveFile = false){
     const copyfiles: Entry[] = Object.values(this.selectedFilesMap);
-    this.selectedFilesMap = {};
     this.copyItem(ev,copyfiles,moveFile,true);
 
   }
@@ -249,6 +262,7 @@ export class HomePage implements OnInit {
           file.forEach(f=>{
             this.debugCopying(f,data.data,moveFile);
           })
+          this.discardLongPressOptions();
         }
       })
     })
@@ -366,7 +380,7 @@ export class HomePage implements OnInit {
     deletefiles.forEach((f:Entry)=>{
       this.moveToBin(f);
     })
-    this.selectedFilesMap = {};
+    this.discardLongPressOptions();
   }
   moveToBin(removeFile: Entry){
     console.log(removeFile)
