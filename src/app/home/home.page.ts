@@ -180,7 +180,6 @@ export class HomePage implements OnInit {
   }
 
   itemPressed(file,i){
-
     this.items[i].selected = !this.items[i].selected;
     if(this.items[i].selected == true){
       this.selectedFilesMap[i] = file
@@ -188,9 +187,8 @@ export class HomePage implements OnInit {
     else {
       this.selectedFilesMap[i]='';
     }
-    console.log( this.selectedFilesMap)
-
   }
+
   discardLongPressOptions(){
     this.selectedFilesMap = {};
     this.listDir();
@@ -222,7 +220,14 @@ export class HomePage implements OnInit {
     return await popover.present();
   }
   
-  async copyItem(ev,file, moveFile = false){
+  copyMultiple(ev,moveFile = false){
+    const copyfiles: Entry[] = Object.values(this.selectedFilesMap);
+    this.selectedFilesMap = {};
+    this.copyItem(ev,copyfiles,moveFile,true);
+
+  }
+
+  async copyItem(ev,file, moveFile = false,multipleCopy = false){
     this.copyFile = file;
     const popover = await this.popoverController.create({
       component: CopyComponent,
@@ -236,7 +241,15 @@ export class HomePage implements OnInit {
     
     this.events.subscribe('filecopied',()=>{
       popover.onDidDismiss().then(data=>{
-        this.debugCopying(file,data.data,moveFile);
+        if(!multipleCopy){
+            this.debugCopying(file,data.data,moveFile);
+        }
+        else{
+          console.log(file)
+          file.forEach(f=>{
+            this.debugCopying(f,data.data,moveFile);
+          })
+        }
       })
     })
     return await popover.present();
@@ -345,6 +358,15 @@ export class HomePage implements OnInit {
     this.file.createDir(this.baseFS + '/Books', '.bin', false);
     this.listDir(false);
     this.menu.close();
+  }
+
+  moveMultipleToBin(){
+    console.log("deleting multiple files")
+    const deletefiles = Object.values(this.selectedFilesMap);
+    deletefiles.forEach((f:Entry)=>{
+      this.moveToBin(f);
+    })
+    this.selectedFilesMap = {};
   }
   moveToBin(removeFile: Entry){
     console.log(removeFile)

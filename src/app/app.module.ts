@@ -16,19 +16,18 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG} from '@angular/platform-bro
 import * as Hammer from 'hammerjs';
 
 export class HammerConfig extends HammerGestureConfig {
-  overrides = {
-    'pan': {
-      direction: Hammer.DIRECTION_ALL
-    },
-    'swipe': { 
-      direction: Hammer.DIRECTION_ALL,
-      enable: true
-    }
-  }
   buildHammer(element: HTMLElement) {
     let mc = new Hammer(element, {
       touchAction: "pan-y"
     });
+    mc.get("pan").set({
+      direction: Hammer.DIRECTION_ALL
+    })
+    mc.get("swipe").set({ 
+      direction: Hammer.DIRECTION_ALL,
+      enable: true
+    })
+    mc.get("press").set({time:700})
     return mc;
   }
 }

@@ -114,7 +114,7 @@
  <div *ngIf="(selectedFilesMap | json) != '{}'" class="long-press-options">
   <ion-icon name="copy" slot="icon-only" (click)="copyMultiple($event)"></ion-icon>
   <ion-icon name="move" slot="icon-only" (click)="copyMultiple($event,true)"></ion-icon>
-  <ion-icon name="trash" slot="icon-only" (click)="deleteMultiple()"></ion-icon>
+  <ion-icon name="trash" slot="icon-only" (click)="moveMultipleToBin()"></ion-icon>
   <ion-icon name="close" slot="icon-only" (click)="discardLongPressOptions()"></ion-icon>
  </div>
 </ion-content>
