@@ -19,17 +19,12 @@ import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 })
 export class HomePage implements OnInit {
 
-  copyFile = null;
-  shouldMove = false;
   folder = '';
-  directories = [];
   items = [];
   nightmode:boolean = false;
   baseFS : string= '';
-  currentFolder: string = '';
   location: string = '';
   hideDirectoryBool: boolean = true;
-  selectedFiles= [];
   selectedFilesMap = {};
   constructor(
     private file: File,
@@ -241,7 +236,6 @@ export class HomePage implements OnInit {
   }
 
   async copyItem(ev,file, moveFile = false,multipleCopy = false){
-    this.copyFile = file;
     const popover = await this.popoverController.create({
       component: CopyComponent,
       event: ev,
