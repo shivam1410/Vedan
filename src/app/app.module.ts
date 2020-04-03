@@ -27,7 +27,7 @@ export class HammerConfig extends HammerGestureConfig {
       direction: Hammer.DIRECTION_ALL,
       enable: true
     })
-    mc.get("press").set({time:700})
+    mc.get("press").set({time:500})
     return mc;
   }
 }

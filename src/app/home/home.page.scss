@@ -20,20 +20,27 @@
       --color: #ffffff
   }
 .header{
+    ion-icon{
+        font-size: 32px;
+    }
     .menu-button{
         padding-left: 5px;
-        font-size: 32px;
     }
     .option-button{
-        font-size: 32px;
+    }
+    .checkmark-all-button{
+
     }
     .bin-button{
-        font-size: 32px;
         padding-right: 5px;
         color: var(--ion-color-purple-900);
     }
 }
+
 .list-items{
+    .activated-item{
+        --background: var(--ion-color-purple-50);
+    }
     .directory{
         ion-icon{
             color: var(--ion-color-purple-300);
@@ -74,9 +81,7 @@
     font-size: 24px;
     background: var(--ion-color-purple-50);
     color: var(--ion-color-purple-700);
-    // z-index: 10;
     box-shadow: 0 14px 28px rgba(0,0,0,0.30), 0 10px 10px rgba(0,0,0,0.22);
-    
 }
 
 .copy-button{

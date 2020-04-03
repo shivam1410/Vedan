@@ -198,6 +198,15 @@ export class HomePage implements OnInit {
     }
   }
 
+  selectAll(){
+    let i=0;
+    this.selectedFilesMap = {};
+    this.items.forEach(f=>{
+      f.selected = true;
+      this.selectedFilesMap[i]=f;
+      i++;
+    })
+  }
   discardLongPressOptions(){
     this.selectedFilesMap = {};
     this.listDir();
@@ -367,14 +376,59 @@ export class HomePage implements OnInit {
     this.listDir(false);
     this.menu.close();
   }
+  
+  moveSingleToBin(removeFile:Entry){
+    let header;
+    let message;
+    if(removeFile.isDirectory){
+      header = 'Remove Shelf';
+      message = 'Do you want to remove this shelf?';
+    }else{
+      header = 'Remove Book';
+      message = 'Do you want to remove this Books?';
+    }
+    const buttons = [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: (blah) => {
+          this.discardLongPressOptions();
+        }
+      }, {
+        text: 'Sure',
+        handler: () => {
+          console.log("deleting single files")
+          this.moveToBin(removeFile);
+          this.discardLongPressOptions();
+        }
+      }
+    ]
+    this.createAlert(header,message,buttons);
+  }
 
   moveMultipleToBin(){
-    console.log("deleting multiple files")
-    const deletefiles = Object.values(this.selectedFilesMap);
-    deletefiles.forEach((f:Entry)=>{
-      this.moveToBin(f);
-    })
-    this.discardLongPressOptions();
+    const header = 'Delete items';
+    const message = 'Do you want to delete all these Books and shelves?';
+    const buttons = [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: (blah) => {
+          this.discardLongPressOptions();
+        }
+      }, {
+        text: 'Sure',
+        handler: () => {
+          console.log("deleting multiple files")
+          const deletefiles = Object.values(this.selectedFilesMap);
+          deletefiles.forEach((f:Entry)=>{
+            this.moveToBin(f);
+          })
+          this.discardLongPressOptions();
+        }
+      }
+    ]
+    this.createAlert(header,message,buttons)
   }
   moveToBin(removeFile: Entry){
     console.log(removeFile)
@@ -443,4 +497,13 @@ export class HomePage implements OnInit {
     })
    }
 
+   async createAlert(header,message,buttons){
+    const alert = await this.alertctrl.create({
+     header: header,
+     message: message,
+     buttons: buttons
+   });
+
+   await alert.present();
+  }
 }
