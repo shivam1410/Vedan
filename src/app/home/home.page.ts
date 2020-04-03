@@ -10,6 +10,7 @@ import {  PopoverComponent } from '../home/popover/popover.component'
 import { CopyComponent } from './copy/copy.component';
 import { CreateShelfComponent } from './create-shelf/create-shelf.component';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
 
 
 @Component({
@@ -38,6 +39,7 @@ export class HomePage implements OnInit {
     public popoverController: PopoverController,
     private events: Events,
     private diagnostic: Diagnostic,
+    private fileOpener: FileOpener,
   ) { }
 
   ngOnInit() {
@@ -62,7 +64,7 @@ export class HomePage implements OnInit {
         else{
           this.listDir();
         }
-
+        //quitting app on back button
         let counter =0;
         this.platform.backButton.subscribe(() => {
           if(counter<2){
@@ -82,6 +84,49 @@ export class HomePage implements OnInit {
         console.error("Platform Not Ready");
       })
   }
+
+  //menu functions switch
+  openFirst() {
+    this.menu.enable(true);
+    this.menu.open();
+  }
+  setLocation(root){
+    this.selectedFilesMap = {}
+    switch (root) {
+      case '':
+        this.location = 'internal';
+        this.setDirectory(root);
+        break;
+      case 'Books':
+        this.location = 'home'
+        this.setDirectory(root);
+        break;
+      case 'sdCard':
+        this.location = 'sdCard'
+        this.sdCard()
+         break;
+      case 'network':
+        this.location = 'network'
+        this.network()
+        break; 
+      case 'trash':
+        this.location = 'trash'
+        this.openTrash();
+        break;
+      default:
+        break;
+    }
+    this.menu.close();
+  }
+
+  setDirectory(root){
+    console.log(root)
+
+    this.baseFS = this.file.externalRootDirectory;
+    this.folder = root;
+    this.listDir();
+    console.log(this.folder)
+  }
   sdCard(){
     this.diagnostic.getExternalSdCardDetails()
     .then(data => {
@@ -90,33 +135,20 @@ export class HomePage implements OnInit {
 
       this.folder='.';
       this.listDir();
-      this.location = "sdCard";
-      this.menu.close();
     })
     .catch(e=> console.error(e))
   }
-  setDirectory(root){
-    this.baseFS = this.file.externalRootDirectory;
-    this.folder = root;
-    this.listDir();
-    this.menu.close();
-    if(root){
-      this.location = 'home';
-    } else {
-      this.location = 'internal'
-    }
-  }
   network(){
-    this.location = 'network'
-    this.menu.close();
     this.createToast("Network not Created now");
   }
-  openFirst() {
-    console.log(this.folder)
-    this.menu.enable(true);
-    this.menu.open();
+  openTrash(){
+    this.folder = 'Books/.bin';
+    this.baseFS = this.file.externalRootDirectory;
+    this.file.createDir(this.baseFS + '/Books', '.bin', false);
+    this.listDir(false);
   }
 
+  //3-dot options popover
   async optionsPopover(ev: any) {
     const popover = await this.popoverController.create({
       component: PopoverComponent,
@@ -149,11 +181,10 @@ export class HomePage implements OnInit {
     return await popover.present();
   }
 
-
+  //main function to list all directries and files
   listDir(shouldHide = true) {
-
+    console.log("in listdir",this.folder)
     this.file.listDir(this.baseFS, this.folder).then(entries => {
-     
       if(shouldHide) {
         this.items = [];
         entries.forEach(data=>{
@@ -169,6 +200,7 @@ export class HomePage implements OnInit {
     })
   }
 
+  //on single click, to enter or open
   itemClicked(file: Entry) {
     if(file.isFile){  
       const options: DocumentViewerOptions = {
@@ -177,14 +209,19 @@ export class HomePage implements OnInit {
       this.document.viewDocument(file.nativeURL, 'application/pdf', options);
     }
     else {
-      let path = this.folder != '' ? this.folder + '/' + file.name : file.name;
-      let folder =  encodeURIComponent(path);
-      let baseFS = this.baseFS;
+      const path = this.folder != '' ? this.folder + '/' + file.name : file.name;
+      const baseFS = this.baseFS;
       this.router.navigate(['.',{
         folder:path,
         baseFS:baseFS,
         location: this.location
       }])
+    }
+  }
+
+  openWith(file:Entry){
+    if(file.isFile){
+      this.fileOpener.open(file.nativeURL, 'application/pdf')
     }
   }
 
@@ -261,7 +298,6 @@ export class HomePage implements OnInit {
             this.debugCopying(file,data.data,moveFile);
         }
         else{
-          console.log(file)
           file.forEach(f=>{
             this.debugCopying(f,data.data,moveFile);
           })
@@ -368,14 +404,7 @@ export class HomePage implements OnInit {
       
     }
   }
-  openTrash(){
-    this.location = 'trash';
-    this.folder = 'Books/.bin';
-    this.baseFS = this.file.externalRootDirectory;
-    this.file.createDir(this.baseFS + '/Books', '.bin', false);
-    this.listDir(false);
-    this.menu.close();
-  }
+  
   
   moveSingleToBin(removeFile:Entry){
     let header;
@@ -397,7 +426,6 @@ export class HomePage implements OnInit {
       }, {
         text: 'Sure',
         handler: () => {
-          console.log("deleting single files")
           this.moveToBin(removeFile);
           this.discardLongPressOptions();
         }
@@ -419,7 +447,6 @@ export class HomePage implements OnInit {
       }, {
         text: 'Sure',
         handler: () => {
-          console.log("deleting multiple files")
           const deletefiles = Object.values(this.selectedFilesMap);
           deletefiles.forEach((f:Entry)=>{
             this.moveToBin(f);
@@ -431,11 +458,9 @@ export class HomePage implements OnInit {
     this.createAlert(header,message,buttons)
   }
   moveToBin(removeFile: Entry){
-    console.log(removeFile)
     this.file.createDir(this.baseFS,"Books/.bin",false);
     const path = this.baseFS + this.folder;
     const newpath = this.baseFS + '/' + 'Books/.bin';
-    console.log(newpath)
     if(removeFile.isDirectory){
       this.file.moveDir(path,removeFile.name,newpath,'')
       .then(()=>{
@@ -443,7 +468,7 @@ export class HomePage implements OnInit {
         this.createToast("Shelf Removed")
       })
       .catch(e =>{
-        console.log(e.message);
+        console.error(e.message);
       });
     } 
     else {
@@ -453,7 +478,7 @@ export class HomePage implements OnInit {
         this.createToast("book Removed")
       })
       .catch(e =>{
-        console.log(e.message);
+        console.error(e.message);
       });
     }
   }
@@ -466,8 +491,6 @@ export class HomePage implements OnInit {
         this.listDir();
       })
       .catch(e=>{
-        console.log(path,deleteFile.name)
-        
         console.error(e)
       })
     }
@@ -477,7 +500,6 @@ export class HomePage implements OnInit {
         this.listDir();
       })
       .catch(e=>{
-        console.log(path,deleteFile.name)
         console.error(e)
       })
     }
