@@ -1,30 +1,53 @@
 
 .dialog-header{
+    width: 100%;
+    position:absolute; 
+    top:0px; 
+    overflow:hidden;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 20px;
+    align-items: center;
     color: var(--ion-color-purple-900);
-    ion-label{
-        // padding: 20px;
+    ion-icon{
+        font-size: 27px;
+    }
+    .dialog-header-child{
+        width: 90%;
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        margin: 20px;
-        font-size: 25px;
+        padding: 0px 0px 0px 10px;
+        ion-label{
+            display: flex;
+            align-items: center;
+            margin: 20px 0px;
+            font-size: 25px;
+        }
     }
 }
 .dialog-content{
+    position:absolute; 
+    top:55px; 
+    bottom:50px; 
+    overflow:auto;
     padding: 0;
+    width: 100%;
     ion-label{
         padding: 0px;
     }
     ion-icon{
         margin-right: 16px;
     }
-    ion-icon{
-        // font-size: 32px;
+    .activated-item{
+        --background: var(--ion-color-purple-50);
     }
 }
 .footer{
-    position: fixed;
+    position: absolute;
     width: 100%;
     bottom: 0;
+    overflow:hidden;
     ion-grid{
         padding: 0;
         ion-col{
@@ -32,10 +55,10 @@
         }
     }
     ion-button{
-            --background: var(--ion-color-purple-600);
-            margin: 0;
-            ion-label{
-                padding: 5px;
-            }
+        --background: var(--ion-color-purple-600);
+        margin: 0;
+        ion-label{
+            padding: 5px;
+        }
     }
 }

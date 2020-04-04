@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { File, Entry } from '@ionic-native/file/ngx';
 import { Events, NavParams, PopoverController} from '@ionic/angular'
 
+
 @Component({
   selector: 'app-copy',
   templateUrl: './copy.component.html',
@@ -10,12 +11,17 @@ import { Events, NavParams, PopoverController} from '@ionic/angular'
 export class CopyComponent {
 
   folder = '';
+  folderStack :string[] = [];
+
   directories = [];
   items = [];
   copyfile;
   copyPath="";
   shouldmove:boolean;
+  shouldImport : boolean = false;
   baseFS= '';
+  selectedFilesMap = {};
+  selectAllItems = false;
   constructor(
     private file: File,
     public navParams:NavParams,
@@ -23,9 +29,18 @@ export class CopyComponent {
     private events: Events,
 
   ) {
-        this.baseFS = this.file.externalRootDirectory;
         this.shouldmove = this.navParams.get("shouldmove");
-        this.folder = "Books";
+        this.shouldImport = this.navParams.get("shouldImport")
+        if(this.shouldImport){
+          this.baseFS = this.file.externalRootDirectory;
+          this.folder = "";
+          this.folderStack.push("");
+        }
+        else{
+          this.baseFS = this.file.externalRootDirectory;
+          this.folder = "Books";
+          this.folderStack.push("Books");
+        }
         this.listDir();
    }
 
@@ -33,32 +48,87 @@ export class CopyComponent {
     this.items = [];
     this.file.listDir(this.baseFS, this.folder).then(entries => {
       entries.forEach(r=>{
-        if(r.isDirectory){
-          this.items.push(r);
-        }
+        this.items = [];
+        entries.forEach(data=>{
+          if(data.name[0] !== '.'){
+            this.items.push(data);
+          }
+        })
       })
       this.items.sort((a,b)=> b.isDirectory - a.isDirectory)
     })
   }
 
 
-  itemClicked(file: Entry) {
-    let path = this.folder != '' ? this.folder + '/' + file.name : file.name;
-    let folder =  encodeURIComponent(path);
-    this.folder = path;
+  itemClicked(file: Entry,i) {
 
-    this.listDir();
+    if(file.isDirectory && !Object.keys(this.selectedFilesMap).length){
+      let path = this.folder != '' ? this.folder + '/' + file.name : file.name;
+      this.folder = path;
+      this.folderStack.push(this.folder);
+
+      this.listDir();
+    }
+    if(this.selectedFilesMap !== '{}'){
+      this.itemPressed(file,i);
+    }
+    
   }
 
   finishCopyFile(){
-
     const path = this.baseFS + this.folder + '/';
     this.events.publish("filecopied");
-
     this.popovercontroller.dismiss(path);
   }
 
+  itemPressed(file,i){
+    this.items[i].selected = !this.items[i].selected;
+    if(this.items[i].selected == true){
+      this.selectedFilesMap[i] = file
+    }
+    else {
+      this.selectedFilesMap[i]='';
+    }
+  }
+
+  selectAll(){
+    this.selectAllItems = !this.selectAllItems;
+    if(this.selectAllItems){
+      let i=0;
+      this.selectedFilesMap = {};
+      this.items.forEach(f=>{
+        f.selected = true;
+        this.selectedFilesMap[i]=f;
+        i++;
+      })
+    }
+    else{
+      this.selectedFilesMap = {};
+      let i=0;
+      this.selectedFilesMap = {};
+      this.items.forEach(f=>{
+        f.selected = false;
+        i++;
+      })
+    }
+
+  }
+
+  finishImport(){
+    this.events.publish("itemSelected");
+    this.popovercontroller.dismiss(this.selectedFilesMap);
+    this.selectedFilesMap = {};
+  }
+
+  backButton(){
+    this.folderStack.pop()
+    this.folder = this.folderStack[this.folderStack.length-1]
+    this.listDir();
+  }
   close(){
+    if(this.shouldImport){
+      this.selectedFilesMap = {};
+    }
     this.popovercontroller.dismiss();
   }
 }

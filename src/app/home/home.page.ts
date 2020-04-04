@@ -27,6 +27,7 @@ export class HomePage implements OnInit {
   location: string = '';
   hideDirectoryBool: boolean = true;
   selectedFilesMap = {};
+  selectAllItems = false;
   constructor(
     private file: File,
     private toast:ToastController,
@@ -181,7 +182,6 @@ export class HomePage implements OnInit {
 
   //main function to list all directries and files
   listDir(shouldHide = true) {
-    console.log("in listdir",this.folder)
     this.file.listDir(this.baseFS, this.folder).then(entries => {
       if(shouldHide) {
         this.items = [];
@@ -200,21 +200,26 @@ export class HomePage implements OnInit {
 
   //click actions on list items=>single click,Long press 
   //on single click, to enter or open
-  itemClicked(file: Entry) {
-    if(file.isFile){  
-      const options: DocumentViewerOptions = {
-        title: file.name
+  itemClicked(file: Entry,i) {
+    if(!Object.keys(this.selectedFilesMap).length){
+      if(file.isFile){  
+        const options: DocumentViewerOptions = {
+          title: file.name
+        }
+        this.document.viewDocument(file.nativeURL, 'application/pdf', options);
       }
-      this.document.viewDocument(file.nativeURL, 'application/pdf', options);
+      else {
+        const path = this.folder != '' ? this.folder + '/' + file.name : file.name;
+        const baseFS = this.baseFS;
+        this.router.navigate(['.',{
+          folder:path,
+          baseFS:baseFS,
+          location: this.location
+        }])
+      }
     }
     else {
-      const path = this.folder != '' ? this.folder + '/' + file.name : file.name;
-      const baseFS = this.baseFS;
-      this.router.navigate(['.',{
-        folder:path,
-        baseFS:baseFS,
-        location: this.location
-      }])
+      this.itemPressed(file,i);
     }
   }
 
@@ -229,13 +234,26 @@ export class HomePage implements OnInit {
   }
 
   selectAll(){
-    let i=0;
-    this.selectedFilesMap = {};
-    this.items.forEach(f=>{
-      f.selected = true;
-      this.selectedFilesMap[i]=f;
-      i++;
-    })
+    this.selectAllItems = !this.selectAllItems;
+    if(this.selectAllItems){
+      let i=0;
+      this.selectedFilesMap = {};
+      this.items.forEach(f=>{
+        f.selected = true;
+        this.selectedFilesMap[i]=f;
+        i++;
+      })
+    }
+    else{
+      let i=0;
+      this.selectedFilesMap = {};
+      this.items.forEach(f=>{
+        f.selected = false;
+        this.selectedFilesMap[i]="";
+        i++;
+      })
+    }
+
   }
   discardLongPressOptions(){
     this.selectedFilesMap = {};
@@ -284,6 +302,29 @@ export class HomePage implements OnInit {
 
   }
 
+//import items from other loacation(internal,sdCard)
+  async importItems(ev){
+    // const newpath;
+    // const oldpa
+    const popover = await this.popoverController.create({
+      component: CopyComponent,
+      event: ev,
+      translucent: false,
+      cssClass: 'custom-popover',
+      componentProps: {
+        shouldImport: true
+      }
+    });
+
+    this.events.subscribe('itemSelected',()=>{
+      popover.onDidDismiss().then(data=>{
+        console.log(data)
+      })
+    })
+
+    return await popover.present();
+  }
+
   //create popover for copy/move files
   async copyItem(ev,file, moveFile = false,multipleCopy = false){
     const popover = await this.popoverController.create({
@@ -315,6 +356,7 @@ export class HomePage implements OnInit {
   //main function to copy,move single file
   debugCopying(copyFile,newpath,shouldMove) {
     const path = this.baseFS + '/' + this.folder + '/';
+    console.log(copyFile,path)
     if(path === newpath){
       if(!shouldMove){
         this.createToast("Cant Copy to Same Directory");
