@@ -46,10 +46,8 @@ export class HomePage implements OnInit {
     this.platform.ready().then(() => {
         this.baseFS = this.route.snapshot.paramMap.get('baseFS') || this.file.externalRootDirectory;
         this.folder = this.route.snapshot.paramMap.get('folder') || 'Books';
-        if(this.folder === ''){
-          this.file.createDir(this.baseFS,'Books',false);
-        }
         this.location = this.route.snapshot.paramMap.get('location') || 'home';
+        
         if(this.folder == 'Books')
         {
           this.file.checkDir(this.baseFS,this.folder)
@@ -164,7 +162,7 @@ export class HomePage implements OnInit {
     this.events.subscribe('nightmodechanged',()=>{
       popover.onDidDismiss().then((data)=>{
         this.nightmode = data.data;
-        this.toggleDarkMode(data.data)
+        // this.toggleDarkMode(data.data)
       })
     })
     this.events.subscribe('createNewShelf',()=>{
@@ -200,6 +198,7 @@ export class HomePage implements OnInit {
     })
   }
 
+  //click actions on list items=>single click,Long press 
   //on single click, to enter or open
   itemClicked(file: Entry) {
     if(file.isFile){  
@@ -216,12 +215,6 @@ export class HomePage implements OnInit {
         baseFS:baseFS,
         location: this.location
       }])
-    }
-  }
-
-  openWith(file:Entry){
-    if(file.isFile){
-      this.fileOpener.open(file.nativeURL, 'application/pdf')
     }
   }
 
@@ -275,12 +268,23 @@ export class HomePage implements OnInit {
     return await popover.present();
   }
   
+
+  //modification options => copy,move,paste,openwith delete
+  //openWith another application other then cleverdox viewer
+  openWith(file:Entry){
+    if(file.isFile){
+      this.fileOpener.open(file.nativeURL, 'application/pdf')
+    }
+  }
+
+  //copy,move Multiple files
   copyMultiple(ev,moveFile = false){
     const copyfiles: Entry[] = Object.values(this.selectedFilesMap);
     this.copyItem(ev,copyfiles,moveFile,true);
 
   }
 
+  //create popover for copy/move files
   async copyItem(ev,file, moveFile = false,multipleCopy = false){
     const popover = await this.popoverController.create({
       component: CopyComponent,
@@ -308,6 +312,7 @@ export class HomePage implements OnInit {
     return await popover.present();
   }
 
+  //main function to copy,move single file
   debugCopying(copyFile,newpath,shouldMove) {
     const path = this.baseFS + '/' + this.folder + '/';
     if(path === newpath){
@@ -364,48 +369,9 @@ export class HomePage implements OnInit {
         }
       }
     }
-  }
-
-  async createToast(str){
-    const toast = await this.toast.create({
-      message: str,
-      duration: 2000,
-      position: 'middle'
-    });
-    toast.present();
-  }
-
-  toggleDarkMode(nightmode){
-
-    // // Query for the toggle that is used to change between themes
-    // const toggle = nightmode
-
-    // // Listen for the toggle check/uncheck to toggle the dark class on the <body>
-    // toggle.addEventListener('ionChange', (ev) => {
-    //   document.body.classList.toggle('dark', ev.detail.checked);
-    // });
-
-    // const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-
-    // // Listen for changes to the prefers-color-scheme media query
-    // prefersDark.addListener((e) => checkToggle(e.matches));
-
-    // // Called when the app loads
-    // function loadApp() {
-    //   checkToggle(prefersDark.matches);
-    // }
-
-    // // Called by the media query to check/uncheck the toggle
-    // function checkToggle(shouldCheck) {
-    //   toggle.checked = shouldCheck;
-    // }
-
-    if(nightmode){
-      
-    }
-  }
+  }  
   
-  
+  //alert for deleting single file to bin
   moveSingleToBin(removeFile:Entry){
     let header;
     let message;
@@ -434,6 +400,7 @@ export class HomePage implements OnInit {
     this.createAlert(header,message,buttons);
   }
 
+   //alert for deleting multiple files to bin
   moveMultipleToBin(){
     const header = 'Delete items';
     const message = 'Do you want to delete all these Books and shelves?';
@@ -457,6 +424,8 @@ export class HomePage implements OnInit {
     ]
     this.createAlert(header,message,buttons)
   }
+
+  //ain function to move files to bin
   moveToBin(removeFile: Entry){
     this.file.createDir(this.baseFS,"Books/.bin",false);
     const path = this.baseFS + this.folder;
@@ -483,7 +452,8 @@ export class HomePage implements OnInit {
     }
   }
 
-   deleteFromBin( deleteFile: Entry){
+  //deleting files from bin
+  deleteFromBin( deleteFile: Entry){
     const path = this.baseFS + '/' + this.folder;
     if(deleteFile.isDirectory){
       this.file.removeRecursively(path,deleteFile.name)
@@ -505,6 +475,7 @@ export class HomePage implements OnInit {
     }
    }
 
+   //deleting all files simultaneously from bin
    emptyBin(){
     const path = this.baseFS + '/' + 'Books/';
     this.file.removeRecursively(path,'.bin')
@@ -519,6 +490,17 @@ export class HomePage implements OnInit {
     })
    }
 
+
+
+   async createToast(str){
+    const toast = await this.toast.create({
+      message: str,
+      duration: 2000,
+      position: 'middle'
+    });
+    toast.present();
+  }
+
    async createAlert(header,message,buttons){
     const alert = await this.alertctrl.create({
      header: header,
@@ -529,3 +511,33 @@ export class HomePage implements OnInit {
    await alert.present();
   }
 }
+
+// toggleDarkMode(nightmode){
+
+  // // Query for the toggle that is used to change between themes
+  // const toggle = nightmode
+
+  // // Listen for the toggle check/uncheck to toggle the dark class on the <body>
+  // toggle.addEventListener('ionChange', (ev) => {
+  //   document.body.classList.toggle('dark', ev.detail.checked);
+  // });
+
+  // const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+  // // Listen for changes to the prefers-color-scheme media query
+  // prefersDark.addListener((e) => checkToggle(e.matches));
+
+  // // Called when the app loads
+  // function loadApp() {
+  //   checkToggle(prefersDark.matches);
+  // }
+
+  // // Called by the media query to check/uncheck the toggle
+  // function checkToggle(shouldCheck) {
+  //   toggle.checked = shouldCheck;
+  // }
+
+  // if(nightmode){
+    
+  // }
+// }
