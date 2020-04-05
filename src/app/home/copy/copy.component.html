@@ -60,7 +60,7 @@
         <ion-button *ngIf="!shouldImport"  class="paste-button" expand="full" (click)="finishCopyFile()">
           <ion-label>Keep Here</ion-label>
         </ion-button>   
-        <ion-button *ngIf="shouldImport" class="paste-button" expand="full" (click)="finishImport()">
+        <ion-button [disabled]="(selectedFilesMap | json) === '{}'" *ngIf="shouldImport" class="paste-button" expand="full" (click)="finishImport()">
           <ion-label>Import</ion-label>
         </ion-button>    
       </ion-col>

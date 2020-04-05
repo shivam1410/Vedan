@@ -318,7 +318,13 @@ export class HomePage implements OnInit {
 
     this.events.subscribe('itemSelected',()=>{
       popover.onDidDismiss().then(data=>{
-        console.log(data)
+        console.log(data.data,data.data.copyPath)
+        const copyPath = data.data.copyPath;
+        const newPath = this.baseFS + '/' + this.folder;
+        const copyFileArray = data.data.fileArray;
+        copyFileArray.forEach(f=>{
+          this.debugCopying(copyPath,f,newPath,false);
+        })
       })
     })
 
@@ -327,6 +333,8 @@ export class HomePage implements OnInit {
 
   //create popover for copy/move files
   async copyItem(ev,file, moveFile = false,multipleCopy = false){
+    const copyPath = this.baseFS + '/' + this.folder + '/';
+  
     const popover = await this.popoverController.create({
       component: CopyComponent,
       event: ev,
@@ -340,11 +348,11 @@ export class HomePage implements OnInit {
     this.events.subscribe('filecopied',()=>{
       popover.onDidDismiss().then(data=>{
         if(!multipleCopy){
-            this.debugCopying(file,data.data,moveFile);
+            this.debugCopying(copyPath,file,data.data,moveFile);
         }
         else{
           file.forEach(f=>{
-            this.debugCopying(f,data.data,moveFile);
+            this.debugCopying(copyPath,f,data.data,moveFile);
           })
           this.discardLongPressOptions();
         }
@@ -354,8 +362,7 @@ export class HomePage implements OnInit {
   }
 
   //main function to copy,move single file
-  debugCopying(copyFile,newpath,shouldMove) {
-    const path = this.baseFS + '/' + this.folder + '/';
+  debugCopying(path,copyFile,newpath,shouldMove) {
     console.log(copyFile,path)
     if(path === newpath){
       if(!shouldMove){

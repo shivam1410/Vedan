@@ -166,7 +166,10 @@ export class CopyComponent {
 
   finishImport(){
     this.events.publish("itemSelected");
-    this.popovercontroller.dismiss(this.selectedFilesMap);
+    this.popovercontroller.dismiss({
+      copyPath: this.baseFS + '/' + this.folder,
+      fileArray: Object.values(this.selectedFilesMap)
+    });
     this.selectedFilesMap = {};
   }
 
