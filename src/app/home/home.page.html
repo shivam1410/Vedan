@@ -100,6 +100,9 @@
     </ion-item-options>
 
     <ion-item-options side="end">
+      <ion-item-option *ngIf="!f.isDirectory"  class="share-button" (click)="shareFile(f)" >
+        <ion-icon name="md-share" slot="icon-only"></ion-icon>
+      </ion-item-option>
       <ion-item-option *ngIf="!f.isDirectory"  class="openWith-button" (click)="openWith(f)" >
         <ion-icon name="share-alt" slot="icon-only"></ion-icon>
       </ion-item-option>

@@ -16,7 +16,7 @@ import { PopoverComponent } from './popover/popover.component';
 import { CopyComponent } from './copy/copy.component';
 import { CreateShelfComponent } from './create-shelf/create-shelf.component';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
-
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 @NgModule({
   imports: [
@@ -34,7 +34,7 @@ import { Diagnostic } from '@ionic-native/diagnostic/ngx';
     FileOpener,
     FileTransfer,  FileTransferObject,
     DocumentViewer,MenuController,StatusBar,PopoverController,
-    Diagnostic,
+    Diagnostic, SocialSharing,
   ],
   declarations: [HomePage,PopoverComponent,CopyComponent,CreateShelfComponent],
   entryComponents: [PopoverComponent,CopyComponent,CreateShelfComponent]

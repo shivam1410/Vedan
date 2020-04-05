@@ -11,7 +11,7 @@ import { CopyComponent } from './copy/copy.component';
 import { CreateShelfComponent } from './create-shelf/create-shelf.component';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 @Component({
   selector: 'app-home',
@@ -41,6 +41,7 @@ export class HomePage implements OnInit {
     private events: Events,
     private diagnostic: Diagnostic,
     private fileOpener: FileOpener,
+    private socialSharing: SocialSharing,
   ) { }
 
   ngOnInit() {
@@ -539,8 +540,6 @@ export class HomePage implements OnInit {
     })
    }
 
-
-
    async createToast(str){
     const toast = await this.toast.create({
       message: str,
@@ -559,7 +558,17 @@ export class HomePage implements OnInit {
 
    await alert.present();
   }
+  
+  shareFile(file:Entry){
+
+    this.socialSharing.share('','',file.nativeURL)
+    .catch(e=>{
+      console.error("failure");
+    })
+  }
+
 }
+
 
 // toggleDarkMode(nightmode){
 
