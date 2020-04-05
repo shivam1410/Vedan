@@ -62,3 +62,10 @@
         }
     }
 }
+:host ion-fab{
+    bottom: 40px;;
+}
+:host ion-fab ion-fab-button{
+    --background: var(--ion-color-purple-600);
+    --background-activated	: var(--ion-color-purple-700);
+}

@@ -125,7 +125,7 @@
   </div>
  </div>
 
- <ion-fab *ngIf="(selectedFilesMap | json) === '{}'" vertical="bottom" horizontal="end" slot="fixed">
+ <ion-fab *ngIf="(selectedFilesMap | json) === '{}' && location === 'home'" vertical="bottom" horizontal="end" slot="fixed">
   <ion-fab-button (click)="importItems($event)">
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>

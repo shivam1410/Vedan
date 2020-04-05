@@ -1,6 +1,7 @@
 <div class="dialog-header">
   <div style="width: 10%;">
-    <ion-icon *ngIf="folderStack.length > 1" class="arrow-round-back" name="arrow-round-back" slot="start" (click)="backButton()"></ion-icon>
+    <ion-icon *ngIf="folderStack.length > 1 && shouldImport" class="arrow-round-back" name="home" slot="start" (click)="home()"></ion-icon>
+    <ion-icon *ngIf="folderStack.length > 1 && !shouldImport" class="arrow-round-back" name="home" slot="start" (click)="setHomeForCopyyingDialog()"></ion-icon>
 </div>
  <div class="dialog-header-child">
   <ion-label *ngIf="!shouldmove && !shouldImport">Copy to</ion-label>  
@@ -23,7 +24,7 @@
 <!-- when used as import dialog -->
 <ion-list *ngIf="shouldImport"  class="dialog-content">
   <div  *ngFor="let f of items, let i=index">
-    <ion-item [ngClass]="{'activated-item': f.selected}"  *ngIf="f.isDirectory" class="directory" (press)="itemPressed(f,i)">
+    <ion-item [ngClass]="{'activated-item': f.selected}"  *ngIf="f.isDirectory && location !== 'home'" class="directory" (press)="itemPressed(f,i)">
       <ion-icon *ngIf="!f.selected" (click)="itemPressed(f,i)" name="folder" slot="start" ></ion-icon>
       <ion-icon *ngIf="f.selected" (click)="itemPressed(f,i)" name="checkmark" slot="start" ></ion-icon>
       <ion-label style="font-weight:bold;" (click)="itemClicked(f,i)" >
@@ -31,16 +32,27 @@
       </ion-label>
     </ion-item>
 
-    <ion-item [ngClass]="{'activated-item': f.selected}"  *ngIf="!f.isDirectory" class="file" (press)="itemPressed(f,i)">
+    <ion-item [ngClass]="{'activated-item': f.selected}"  *ngIf="!f.isDirectory && location !== 'home'" class="file" (press)="itemPressed(f,i)">
       <ion-icon *ngIf="!f.selected" (click)="itemPressed(f,i)" name="document" slot="start" ></ion-icon>
       <ion-icon *ngIf="f.selected" (click)="itemPressed(f,i)" name="checkmark" slot="start" ></ion-icon>
       <ion-label style="font-weight:bold;" (click)="itemClicked(f,i)" >
         {{f.name}}
       </ion-label>
     </ion-item>
+
+    <ion-item *ngIf="location == 'home'" (click)="switchLocation(f)">
+      <ion-icon name="folder" slot="start" ></ion-icon>
+      <ion-label style="font-weight:bold;">
+        {{f}}
+      </ion-label>
+    </ion-item>
   </div>
 </ion-list>
-
+  <ion-fab *ngIf="folderStack.length > 1" vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="backButton()">
+    <ion-icon name="md-arrow-back"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 <div class="footer">
   <ion-grid class="buttons">
     <ion-row>
