@@ -41,7 +41,9 @@
     </ion-item>
 
     <ion-item *ngIf="location == 'home'" (click)="switchLocation(f)">
-      <ion-icon name="folder" slot="start" ></ion-icon>
+      <ion-icon *ngIf="f === 'Internal'" name="disc" slot="start" ></ion-icon>
+      <ion-icon *ngIf="f === 'External'" name="card" slot="start" ></ion-icon>
+
       <ion-label style="font-weight:bold;">
         {{f}}
       </ion-label>

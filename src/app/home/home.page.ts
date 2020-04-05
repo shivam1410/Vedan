@@ -292,7 +292,7 @@ export class HomePage implements OnInit {
   //openWith another application other then cleverdox viewer
   openWith(file:Entry){
     if(file.isFile){
-      this.fileOpener.open(file.nativeURL, 'application/pdf')
+      this.fileOpener.showOpenWithDialog(file.nativeURL, 'application/pdf')
     }
   }
 
