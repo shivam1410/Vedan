@@ -67,6 +67,7 @@ export class HomePage implements OnInit {
         //quitting app on back button
         let counter =0;
         this.platform.backButton.subscribe(() => {
+          this.discardLongPressOptions();
           if(counter<2){
             counter++;
             if(counter==2){
@@ -120,12 +121,10 @@ export class HomePage implements OnInit {
   }
 
   setDirectory(root){
-    console.log(root)
 
     this.baseFS = this.file.externalRootDirectory;
     this.folder = root;
     this.listDir();
-    console.log(this.folder)
   }
   sdCard(){
     this.diagnostic.getExternalSdCardDetails()
