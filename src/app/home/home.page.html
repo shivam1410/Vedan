@@ -66,12 +66,13 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="location !== 'network'">
+<ion-content *ngIf="!items" style="text-align: center;">
+  <ion-spinner name="crescent"></ion-spinner>
+</ion-content>
 
+<ion-content *ngIf="items && location !== 'network'">
  <ion-list>
-
    <ion-item-sliding   *ngFor="let f of items, let i=index" class="list-items">
-
     <ion-item [ngClass]="{'activated-item': f.selected}" class="directory"  *ngIf="f.isDirectory" (press)="itemPressed(f,i)">
       <ion-icon *ngIf="!f.selected" (click)="itemPressed(f,i)" name="folder" slot="start" ></ion-icon>
       <ion-icon *ngIf="f.selected" (click)="itemPressed(f,i)" name="checkmark" slot="start" ></ion-icon>
@@ -100,16 +101,13 @@
     </ion-item-options>
 
     <ion-item-options side="end">
-      <ion-item-option *ngIf="!f.isDirectory"  class="share-button" (click)="shareFile(f)" >
+      <ion-item-option *ngIf="!f.isDirectory && location !== 'trash'"  class="share-button" (click)="shareFile(f)" >
         <ion-icon name="md-share" slot="icon-only"></ion-icon>
       </ion-item-option>
       <ion-item-option *ngIf="!f.isDirectory"  class="openWith-button" (click)="openWith(f)" >
         <ion-icon name="share-alt" slot="icon-only"></ion-icon>
       </ion-item-option>
-      <ion-item-option  *ngIf="location !== 'trash'" class="copy-button" (click)="copyItem($event, f)" >
-        <ion-icon name="copy" slot="icon-only"></ion-icon>
-      </ion-item-option>
-      <ion-item-option class="move-button" (click)="copyItem($event, f, true)" >
+      <ion-item-option *ngIf="location === trash" class="move-button" (click)="copyItem($event, f, true)" >
         <ion-icon name="ios-cut" slot="icon-only"></ion-icon>
       </ion-item-option>
     </ion-item-options>
@@ -128,12 +126,11 @@
   </div>
  </div>
 
- <ion-fab *ngIf="(selectedFilesMap | json) === '{}' && location === 'home'" vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button (click)="importItems($event)">
-    <ion-icon name="add"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
-
+  <ion-fab *ngIf="(selectedFilesMap | json) === '{}' && location === 'home'" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="importItems($event)">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
 
 <ion-content *ngIf="location === 'network'" >
