@@ -1,3 +1,6 @@
-<ion-app>
+<ion-app  *ngIf="!spinner">
   <ion-router-outlet></ion-router-outlet>
 </ion-app>
+<div class="spinner"  *ngIf="spinner" >
+  <ion-spinner name="crescent"></ion-spinner>
+</div>

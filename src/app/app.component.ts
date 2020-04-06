@@ -10,11 +10,13 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+  spinner = false;
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar
   ) {
+    this.spinner = true;
     this.initializeApp();
   }
 
@@ -23,6 +25,7 @@ export class AppComponent {
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#311b92');
       this.splashScreen.hide();
+      this.spinner = false;
     });
   }
 }

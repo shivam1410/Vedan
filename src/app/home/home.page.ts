@@ -43,9 +43,12 @@ export class HomePage implements OnInit {
     private diagnostic: Diagnostic,
     private fileOpener: FileOpener,
     private socialSharing: SocialSharing,
-  ) { }
+  ) {
+    this.spinner = true;
+   }
 
   ngOnInit() {
+    this.spinner = true;
     this.platform.ready().then(() => {
         this.baseFS = this.route.snapshot.paramMap.get('baseFS') || this.file.externalRootDirectory;
         this.folder = this.route.snapshot.paramMap.get('folder') || 'Books';
@@ -60,6 +63,7 @@ export class HomePage implements OnInit {
           .catch(e=>{
             console.error("creating Books Shelf")
             this.file.createDir(this.baseFS, this.folder,false)
+            this.spinner = false;
           })
         }
         else{
@@ -196,6 +200,7 @@ export class HomePage implements OnInit {
         this.items = entries;
       }
       this.items.sort((a,b)=> b.isDirectory - a.isDirectory)
+      this.spinner = false;
     })
   }
 
@@ -321,9 +326,30 @@ export class HomePage implements OnInit {
       popover.onDidDismiss().then(data=>{
         const copyPath = data.data.copyPath;
         const newPath = this.baseFS + '/' + this.folder;
-        const copyFileArray = data.data.fileArray;
+        const copyFileArray: [] = data.data.fileArray;
+        let i=0;
+        let j=0;
+        this.spinner = true;
         copyFileArray.forEach(f=>{
-          this.debugCopying(copyPath,f,newPath,false);
+          this.debugCopying(copyPath,f,newPath,false)
+          .then(()=>{ 
+            i++;
+            if(i+j === copyFileArray.length){
+              this.listDir();
+              if(i)this.createToast(`${i} Items imported`);
+              if(j)this.createToast(`${j} Items Failed`);
+              this.spinner = false;
+            }
+          })
+          .catch(e=>{
+            j++;
+            if(i+j === copyFileArray.length){
+              this.listDir();
+              if(i)this.createToast(`${i} Items imported`);
+              if(j)this.createToast(`${j} Items Failed`);
+              this.spinner = false;
+            }
+          })
         })
       })
     })
@@ -348,11 +374,54 @@ export class HomePage implements OnInit {
     this.events.subscribe('filecopied',()=>{
       popover.onDidDismiss().then(data=>{
         if(!multipleCopy){
-            this.debugCopying(copyPath,file,data.data,moveFile);
-        }
+            this.debugCopying(copyPath,file,data.data,moveFile)
+            .then(()=>{
+              this.listDir()
+              if(moveFile){
+                this.createToast("Moved")
+              } else {
+                this.createToast("Copied")
+              }
+            })
+            .catch(e =>{
+              console.error(e.message);
+            });
+          }
         else{
+          let i = 0;
+          let j = 0;
+          this.spinner = true;
           file.forEach(f=>{
-            this.debugCopying(copyPath,f,data.data,moveFile);
+            this.debugCopying(copyPath,f,data.data,moveFile)
+            .then(()=>{ 
+              console.log(i, + j, + file.length);
+              i++;
+              if(i+j === file.length){
+                this.listDir();
+                if(moveFile){
+                  if(i)this.createToast(`${i} items Moved`)
+                  if(j)this.createToast(`${j} Items Failed`);
+                } else {
+                  if(i)this.createToast(`${i} items Moved`)
+                  if(j)this.createToast(`${j} Items Failed`);
+                }
+                this.spinner = false;
+              }
+            })
+            .catch(e=>{
+              j++;
+              if(i+j === file.length){
+                this.listDir();
+                if(moveFile){
+                  if(i)this.createToast(`${i} items Moved`)
+                  if(j)this.createToast(`${j} Items Failed`);
+                } else {
+                  if(i)this.createToast(`${i} items Moved`)
+                  if(j)this.createToast(`${j} Items Failed`);
+                }
+                this.spinner = false;
+              }
+            })
           })
           this.discardLongPressOptions();
         }
@@ -365,46 +434,18 @@ export class HomePage implements OnInit {
   debugCopying(path,copyFile,newpath,shouldMove) {
     if(shouldMove) {
       if(copyFile.isDirectory){
-        this.file.moveDir(path,copyFile.name,newpath,'')
-        .then(()=>{
-          this.listDir()
-          this.createToast("Moved")
-        })
-        .catch(e =>{
-          console.error(e.message);
-        });
+        return this.file.moveDir(path,copyFile.name,newpath,'')
       } 
       else {
-        this.file.moveFile(path,copyFile.name,newpath,'')
-        .then(()=>{
-          this.listDir()
-          this.createToast("Moved")
-        })
-        .catch(e =>{
-          console.error(e.message);
-        });
+        return this.file.moveFile(path,copyFile.name,newpath,'')
       }
     } 
     else {
       if(copyFile.isDirectory){
-        this.file.copyDir(path,copyFile.name,newpath,'')
-        .then(()=>{
-          this.listDir()
-          this.createToast("Copied")
-        })
-        .catch(e =>{
-          console.error(e.message);
-        });
+        return this.file.copyDir(path,copyFile.name,newpath,'')
       } 
       else {
-        this.file.copyFile(path,copyFile.name,newpath,'')
-        .then(()=>{
-          this.listDir()
-          this.createToast("Copied")
-        })
-        .catch(e =>{
-          console.error(e.message);
-        });
+        return this.file.copyFile(path,copyFile.name,newpath,'')
       }
     }
   }  
@@ -452,10 +493,12 @@ export class HomePage implements OnInit {
       }, {
         text: 'Sure',
         handler: () => {
+          this.spinner = true;
           const deletefiles = Object.values(this.selectedFilesMap);
           deletefiles.forEach((f:Entry)=>{
             this.moveToBin(f);
           })
+          this.spinner = false;
           this.discardLongPressOptions();
         }
       }
