@@ -26,10 +26,8 @@
     .menu-button{
         padding-left: 5px;
     }
-    .option-button{
-    }
-    .checkmark-all-button{
-
+    .checkMark-button{
+        padding-right: 5px;
     }
     .bin-button{
         padding-right: 5px;
@@ -113,4 +111,19 @@
 :host ion-fab ion-fab-button{
     --background: var(--ion-color-purple-600);
     --background-activated	: var(--ion-color-purple-700);
+}
+.spinner{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    background: #00000066;
+   ion-spinner{
+    height: 50px !important;
+    width: 50px !important;
+   }
 }

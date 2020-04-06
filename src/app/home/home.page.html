@@ -61,16 +61,14 @@
     <ion-title *ngIf="location == 'trash'">
       Bin
     </ion-title>
+    <ion-icon *ngIf="(selectedFilesMap | json) != '{}' && location != 'trash'" class="checkMark-button"  name="checkmark-circle" slot="end" (click)="selectAll()"></ion-icon>
     <ion-icon *ngIf="location == 'trash'" class="bin-button " slot="end" name="trash" (click)="emptyBin()"></ion-icon>
     <ion-icon class="option-button" slot="end" name="more" (click)="optionsPopover($event)"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="!items" style="text-align: center;">
-  <ion-spinner name="crescent"></ion-spinner>
-</ion-content>
 
-<ion-content *ngIf="items && location !== 'network'">
+<ion-content *ngIf="location !== 'network'">
  <ion-list>
    <ion-item-sliding   *ngFor="let f of items, let i=index" class="list-items">
     <ion-item [ngClass]="{'activated-item': f.selected}" class="directory"  *ngIf="f.isDirectory" (press)="itemPressed(f,i)">
@@ -119,7 +117,6 @@
     <ion-icon name="copy" slot="icon-only" (click)="copyMultiple($event)"></ion-icon>
     <ion-icon name="ios-cut" slot="icon-only" (click)="copyMultiple($event,true)"></ion-icon>
     <ion-icon name="ios-trash" slot="icon-only" (click)="moveMultipleToBin()"></ion-icon>
-    <ion-icon name="checkmark-circle" slot="icon-only" (click)="selectAll()"></ion-icon>
   </div>
   <div class="close-button">
     <ion-icon name="close" slot="icon-only" (click)="discardLongPressOptions()"></ion-icon>
@@ -131,6 +128,10 @@
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+  <div class="spinner"  *ngIf="spinner" >
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
 </ion-content>
 
 <ion-content *ngIf="location === 'network'" >
