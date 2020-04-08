@@ -126,7 +126,6 @@ export class HomePage implements OnInit {
   }
 
   setDirectory(root){
-
     this.baseFS = this.file.externalRootDirectory;
     this.folder = root;
     this.listDir();
@@ -286,8 +285,6 @@ export class HomePage implements OnInit {
           console.error("Error in creating DIrectory");
         })
       })
-    })
-    popover.onDidDismiss().then(()=>{
     })
     return await popover.present();
   }

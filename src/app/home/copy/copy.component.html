@@ -8,6 +8,7 @@
   <ion-label *ngIf="shouldmove && !shouldImport">Move to</ion-label>
   <ion-label *ngIf="shouldImport">Import from</ion-label>
   <ion-icon  *ngIf="(selectedFilesMap | json) != '{}'" class="checkmark-circle" name="checkmark-circle" slot="end" (click)="selectAll()"></ion-icon>
+  <ion-icon  *ngIf="!shouldImport && location != 'home'" class="add" name="add" slot="end" (click)="createNewShelf()"></ion-icon>
  </div>
 </div>
 <!-- when used as copy paste dialog -->

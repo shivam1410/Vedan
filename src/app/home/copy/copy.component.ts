@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { File, Entry } from '@ionic-native/file/ngx';
 import { Events, NavParams, PopoverController} from '@ionic/angular'
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
+import { CreateShelfComponent } from '../create-shelf/create-shelf.component';
 
 
 @Component({
@@ -124,6 +125,34 @@ export class CopyComponent {
     }
     
   }
+
+  async createNewShelf(){
+    const createShelfPopover = await this.popovercontroller.create({
+      component: CreateShelfComponent,
+      translucent: false,
+    });
+    
+    this.events.subscribe('shelfAdded',()=>{
+      createShelfPopover.onDidDismiss().then((data)=>{
+        
+        const shelfName = data.data;
+        const path = this.baseFS + '/' + this.folder;
+        this.file.createDir(path,shelfName,false)
+        .then(data=>{
+          this.folder += '/' + data.name;
+          this.listDir();
+        })
+        .catch(e=>{
+          console.error("Error in creating DIrectory");
+        })
+      })
+    })
+    createShelfPopover.onDidDismiss().then(()=>{
+    })
+    return await createShelfPopover.present();
+  }
+
+
 
   finishCopyFile(){
     const path = this.baseFS + this.folder + '/';
