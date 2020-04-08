@@ -1,4 +1,4 @@
-# ionic-PDF
+# Vedan
 
 ## Description
 This is a basic PDF viewer developed in Ionic with core being Angular.<br>
@@ -25,11 +25,11 @@ creating the apk can be trick part
  - **Copy apk file to main folder**</br>
  `cp platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk app-release-unsigned.apk`
  - **Create your signature**</br>
- `keytool -genkey -v -keystore ionic-PDF.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000`
+ `keytool -genkey -v -keystore Vedan.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000`
  - **Sign your apk with your signature**</br>
- `jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ionic-PDF.keystore app-release-unsigned.apk alias_name`
+ `jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore Vedan.keystore app-release-unsigned.apk alias_name`
  - **Verify (zipalign can be found in Android/Sdk/build-tools/28.0.3/)**</br>
- `zipalign  -v 4 app-release-unsigned.apk ionic-PDF.apk`
+ `zipalign  -v 4 app-release-unsigned.apk Vedan.apk`
 </br>
 
 ## ScreenShots
