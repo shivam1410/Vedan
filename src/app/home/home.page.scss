@@ -1,4 +1,7 @@
-
+ion-title{
+    font-family: 'Pacifico', cursive;
+    font-size: 24px;
+}
 .my-custom-menu {
     --width: 250px;
     ion-list{
@@ -16,7 +19,7 @@
     
   }
   ion-toolbar{
-      --background: var(--ion-color-purple-600);
+      --background: var(--ion-color-purple-900);
       --color: #ffffff
   }
 .header{
@@ -36,6 +39,15 @@
 }
 
 .list-items{
+    ion-card{
+        height: 90px;
+        border-radius: 20px;
+        ion-item{
+            height: 100%;
+            display: flex;
+            justify-content: center;
+        }
+    }
     .activated-item{
         --background: var(--ion-color-purple-50);
     }

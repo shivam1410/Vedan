@@ -88,6 +88,7 @@ export class HomePage implements OnInit {
       })
       .catch(e=>{
         console.error("Platform Not Ready");
+        this.spinner = false;
       })
   }
 
