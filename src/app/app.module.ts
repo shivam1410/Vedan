@@ -18,7 +18,7 @@ import * as Hammer from 'hammerjs';
 export class HammerConfig extends HammerGestureConfig {
   buildHammer(element: HTMLElement) {
     let mc = new Hammer(element, {
-      touchAction: "pan-y"
+      touchAction: "auto",
     });
     mc.get("pan").set({
       direction: Hammer.DIRECTION_ALL

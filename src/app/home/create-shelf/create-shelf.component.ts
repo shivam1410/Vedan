@@ -10,14 +10,19 @@ import { PopoverController, NavParams, Events } from '@ionic/angular';
 export class CreateShelfComponent {
 
     shelfName: string = '';
+    ren: boolean;
     constructor(
         private popoverController: PopoverController,
         public navParams:NavParams,
         private events: Events,
     ) {
-        console.log("create shelf")
+        this.shelfName = this.navParams.get("filename")
+        this.ren = this.navParams.get("rename")
     }
 
+    rename(){
+        this.popoverController.dismiss(this.shelfName);
+    }
     createShelf() {
         this.events.publish("shelfAdded");
         this.popoverController.dismiss(this.shelfName);

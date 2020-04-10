@@ -20,7 +20,7 @@ ion-title{
   }
   ion-toolbar{
       --background: var(--ion-color-purple-900);
-      --color: #ffffff
+      --color: #ffffff;
   }
 .header{
     ion-icon{
@@ -34,29 +34,61 @@ ion-title{
     }
     .bin-button{
         padding-right: 5px;
-        color: var(--ion-color-purple-900);
+        color: var(--ion-color-danger);
     }
 }
-
-.list-items{
+.directory-parent{
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    background: var(--ion-color-purple-900);
+    .forward-button{
+        height: 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 3em;
+        position: fixed;
+        right: 0;
+    }
+    .left-wrap{
+        left: 0;
+    }
+    .right-wrap{
+        right: 0;
+    }
     ion-card{
-        height: 90px;
+        height: 100px;
+        width: fit-content;
         border-radius: 20px;
+
         ion-item{
             height: 100%;
             display: flex;
-            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            --background-activated: var(--ion-color-purple-100);
+            --ion-item-background-activated:  var(--ion-color-purple-100);
+            ion-icon{
+                color: var(--ion-color-purple-300);
+                font-size: 32px;
+                margin-right: 10px;
+                
+            }
+            font-weight:bold;
         }
     }
+}
+.file-parent{
+        ion-item{
+            height: 100%;
+            display: flex;
+            height: 70px;
+            padding: 0px 10px;
+        }
     .activated-item{
         --background: var(--ion-color-purple-50);
-    }
-    .directory{
-        ion-icon{
-            color: var(--ion-color-purple-300);
-            font-size: 32px;
-        }
-        font-weight:bold;
     }
     .file{
         ion-icon{
@@ -109,13 +141,13 @@ ion-title{
     }
 }
 .share-button{
-    --background: var(--ion-color-purple-400);
+    --background: var(--ion-color-purple-500);
 }
 .openWith-button{
-    --background: var(--ion-color-purple-300);
-}
-.copy-button{
     --background: var(--ion-color-purple-400);
+}
+.rename-button{
+    --background: var(--ion-color-purple-300);
 }
 .move-button{
     --background: var(--ion-color-purple-300);

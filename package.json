@@ -23,7 +23,7 @@
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/diagnostic": "^5.22.0",
     "@ionic-native/document-viewer": "^5.21.5",
-    "@ionic-native/file": "^5.21.4",
+    "@ionic-native/file": "^5.23.0",
     "@ionic-native/file-opener": "^5.21.4",
     "@ionic-native/file-transfer": "^5.21.5",
     "@ionic-native/social-sharing": "^5.23.0",
@@ -81,7 +81,6 @@
   "description": "An Ionic project",
   "cordova": {
     "plugins": {
-      "cordova-plugin-file": {},
       "cordova-plugin-file-opener2": {},
       "cordova-plugin-whitelist": {},
       "cordova-plugin-statusbar": {},
@@ -97,7 +96,8 @@
       },
       "cordova-plugin-x-socialsharing": {
         "ANDROID_SUPPORT_V4_VERSION": "24.1.1+"
-      }
+      },
+      "cordova-plugin-file": {}
     },
     "platforms": [
       "android"

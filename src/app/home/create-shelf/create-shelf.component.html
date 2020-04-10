@@ -1,5 +1,6 @@
 <div class="dialog-header">
-    <ion-label> Name of Shelf</ion-label>
+    <ion-label *ngIf="!ren"> Name of Shelf</ion-label>
+    <ion-label *ngIf="ren">Rename</ion-label>
 </div>
 <ion-item>
     <ion-input [(ngModel)]="shelfName"></ion-input>
@@ -9,10 +10,11 @@
     <ion-grid class="buttons">
         <ion-row>
         <ion-col>
-            <ion-button [disabled]="!shelfName" class="paste-button" expand="full" (click)="createShelf()">ADD</ion-button>      
+            <ion-button *ngIf="ren" [disabled]="!shelfName" class="paste-button" expand="full" (click)="createShelf()">RENAME</ion-button>      
+            <ion-button *ngIf="!ren" [disabled]="!shelfName" class="paste-button" expand="full" (click)="createShelf()">ADD</ion-button>      
         </ion-col>
         <ion-col class="cancel">
-            <ion-button expand="full" (click)="close()">cancel</ion-button>      
+            <ion-button expand="full" (click)="close()">CANCEL</ion-button>      
         </ion-col>
         </ion-row>
     </ion-grid> 

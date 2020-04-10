@@ -55,7 +55,6 @@ export class CopyComponent {
    //switch location internal or external
   switchLocation( loc){
     this.location = loc;
-    console.log(this.location)
     this.folderStack.push(loc);
 
     switch (loc) {
@@ -112,7 +111,7 @@ export class CopyComponent {
   }
 
 //single click
-  itemClicked(file: Entry,i) {
+  itemClicked(file: Entry,i=null) {
 
     if(file.isDirectory && !Object.keys(this.selectedFilesMap).length){
       let path = this.folder != '' ? this.folder + '/' + file.name : file.name;
@@ -206,7 +205,6 @@ export class CopyComponent {
     
     this.folderStack.pop();
     const top = this.folderStack[this.folderStack.length-1];
-    console.log("top",top)
     switch (top) {
       case 'home':
       case 'Internal':

@@ -29,6 +29,10 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
+:root{
+  --ion-font-family: 'Ubuntu', monospace !important;
+}
+
 .custom-popover .popover-content {
   width: 80% !important;
   top: 70px !important;
@@ -37,6 +41,11 @@
 }
 .option-popover .popover-content {
   width: 145px;
+}
+
+
+ion-spinner{
+  --color: var(--ion-color-purple-800);
 }
 
 .spinner{

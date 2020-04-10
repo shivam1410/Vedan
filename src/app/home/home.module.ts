@@ -17,6 +17,8 @@ import { CopyComponent } from './copy/copy.component';
 import { CreateShelfComponent } from './create-shelf/create-shelf.component';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { FilterItemsPipe } from './pipe/filter-items.pipe';
+import { SplitTopPipe } from './pipe/split-top.pipe';
 
 @NgModule({
   imports: [
@@ -36,7 +38,7 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
     DocumentViewer,MenuController,StatusBar,PopoverController,
     Diagnostic, SocialSharing,
   ],
-  declarations: [HomePage,PopoverComponent,CopyComponent,CreateShelfComponent],
+  declarations: [HomePage,PopoverComponent,CopyComponent,CreateShelfComponent, FilterItemsPipe, SplitTopPipe],
   entryComponents: [PopoverComponent,CopyComponent,CreateShelfComponent]
 })
 export class HomePageModule {}

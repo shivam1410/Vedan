@@ -10,6 +10,8 @@ import { PopoverController, NavParams, Events } from '@ionic/angular';
 export class PopoverComponent {
     nightmode:boolean;
     hideDirectoryBool:boolean;
+    type;
+    editFile;
     constructor(
         private popoverController: PopoverController,
         public navParams:NavParams,
@@ -17,6 +19,19 @@ export class PopoverComponent {
     ) {
         this.nightmode = this.navParams.get('nightmode');   
         this.hideDirectoryBool = this.navParams.get('hideDirectoryBool');
+        this.type = this.navParams.get('type');
+    }
+
+    move(){
+        this.popoverController.dismiss('move');
+    }
+
+    async rename(){
+        this.popoverController.dismiss('rename')
+    }
+
+    delete(){
+        this.popoverController.dismiss('delete')
     }
 
     changeFontSize(str){

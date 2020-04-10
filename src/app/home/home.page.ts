@@ -61,7 +61,6 @@ export class HomePage implements OnInit {
             this.listDir();
           })
           .catch(e=>{
-            console.error("creating Books Shelf")
             this.file.createDir(this.baseFS, this.folder,false)
             this.spinner = false;
           })
@@ -84,7 +83,6 @@ export class HomePage implements OnInit {
             navigator['app'].exitApp()
           }
         })
-              
       })
       .catch(e=>{
         console.error("Platform Not Ready");
@@ -146,10 +144,21 @@ export class HomePage implements OnInit {
     this.createToast("Network not Created now");
   }
   openTrash(){
-    this.folder = 'Books/.bin';
-    this.baseFS = this.file.externalRootDirectory;
-    this.file.createDir(this.baseFS + '/Books', '.bin', false);
-    this.listDir(false);
+    
+    const path = this.baseFS + '/Books'
+    const trashFolder = '.bin';
+    this.file.createDir(path,trashFolder,false)
+    .then(()=>{
+      this.folder = 'Books/.bin';
+      this.baseFS = this.file.externalRootDirectory;
+      this.listDir(false);
+    })
+    .catch(e=>{
+      console.error(e)
+      this.folder = 'Books/.bin';
+      this.baseFS = this.file.externalRootDirectory;
+      this.listDir(false);
+    })
   }
 
   //3-dot options popover
@@ -229,13 +238,17 @@ export class HomePage implements OnInit {
     }
   }
 
-  itemPressed(file,i){
-    this.items[i].selected = !this.items[i].selected;
-    if(this.items[i].selected == true){
-      this.selectedFilesMap[i] = file
-    }
-    else {
-      this.selectedFilesMap[i]='';
+  itemPressed(file,i,ev=null){
+    if(file.isFile){
+      this.items[i].selected = !this.items[i].selected;
+      if(this.items[i].selected == true){
+        this.selectedFilesMap[i] = file
+      }
+      else {
+        this.selectedFilesMap[i]='';
+      }
+    } else {
+      this.directoryOptionPopOver(ev,file,i);
     }
   }
 
@@ -245,9 +258,11 @@ export class HomePage implements OnInit {
       let i=0;
       this.selectedFilesMap = {};
       this.items.forEach(f=>{
-        f.selected = true;
-        this.selectedFilesMap[i]=f;
-        i++;
+        if(!f.isDirectory){
+          f.selected = true;
+          this.selectedFilesMap[i]=f;
+          i++;
+        }
       })
     }
     else{
@@ -264,6 +279,71 @@ export class HomePage implements OnInit {
   discardLongPressOptions(){
     this.selectedFilesMap = {};
     this.listDir();
+  }
+
+
+  async directoryOptionPopOver(ev,file,index){
+    const popover = await this.popoverController.create({
+      component: PopoverComponent,
+      event: ev,
+      translucent: false,
+      componentProps: {
+        type:'directoryOptions',
+      },
+      cssClass: 'option-popover'
+    });
+
+    popover.onDidDismiss().then(data=>{
+      if(data.data === "delete"){
+        this.moveSingleToBin(file);
+      }
+      if(data.data === "rename"){
+        this.renameFile(file);
+      }
+      if(data.data === "move"){
+        this.copyItem(ev,file,true,false)
+      }
+    })
+  
+    return await popover.present();
+  }
+
+  async renameFile(f){
+    const popover = await this.popoverController.create({
+      component: CreateShelfComponent,
+      translucent: false,
+      componentProps:{
+        rename: true,
+        filename: f.name
+      }
+    });
+    const path = this.baseFS + '/' + this.folder + '/';
+      popover.onDidDismiss().then((data)=>{
+        this.spinner = true;
+        if(data.data){       
+          if(f.isDirectory){
+            this.file.moveDir(path,f.name,path,data.data)
+            .then(d=>{
+              this.listDir();
+              this.spinner = false;
+            })
+            .catch(e=>{
+              console.error("file not rename")
+            }) 
+          }
+          if(f.isFile){
+            this.file.moveFile(path,f.name,path,data.data)
+            .then(d=>{
+              this.listDir();
+              this.spinner = false;
+            })
+            .catch(e=>{
+              console.error("file not rename")
+            }) 
+          }
+        }
+      })
+    return await popover.present();
   }
 
   async createNewShelf(){
@@ -392,7 +472,6 @@ export class HomePage implements OnInit {
           file.forEach(f=>{
             this.debugCopying(copyPath,f,data.data,moveFile)
             .then(()=>{ 
-              console.log(i, + j, + file.length);
               i++;
               if(i+j === file.length){
                 this.listDir();
@@ -448,6 +527,7 @@ export class HomePage implements OnInit {
     }
   }  
   
+  //deleting functions
   //alert for deleting single file to bin
   moveSingleToBin(removeFile:Entry){
     let header;
@@ -463,7 +543,7 @@ export class HomePage implements OnInit {
       {
         text: 'Cancel',
         role: 'cancel',
-        handler: (blah) => {
+        handler: () => {
           this.discardLongPressOptions();
         }
       }, {
@@ -506,9 +586,10 @@ export class HomePage implements OnInit {
 
   //ain function to move files to bin
   moveToBin(removeFile: Entry){
-    this.file.createDir(this.baseFS,"Books/.bin",false);
+    this.file.createDir(this.baseFS + "/Books/",".bin",false);
     const path = this.baseFS + this.folder;
     const newpath = this.baseFS + '/' + 'Books/.bin';
+    
     if(removeFile.isDirectory){
       this.file.moveDir(path,removeFile.name,newpath,'')
       .then(()=>{
