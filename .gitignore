@@ -32,3 +32,5 @@ npm-debug.log*
 package-lock.json
 app-release-unsigned.apk
 Vedan.apk
+Vedan*.apk
+Vedan.keystore
