@@ -320,7 +320,7 @@ export class HomePage implements OnInit {
     const path = this.baseFS + '/' + this.folder + '/';
       popover.onDidDismiss().then((data)=>{
         this.spinner = true;
-        if(data.data){       
+        if(data.data && data.data != f.name){       
           if(f.isDirectory){
             this.file.moveDir(path,f.name,path,data.data)
             .then(d=>{
@@ -329,6 +329,7 @@ export class HomePage implements OnInit {
             })
             .catch(e=>{
               console.error("file not rename")
+              this.spinner = false;
             }) 
           }
           if(f.isFile){
@@ -339,6 +340,7 @@ export class HomePage implements OnInit {
             })
             .catch(e=>{
               console.error("file not rename")
+              this.spinner = false;
             }) 
           }
         }

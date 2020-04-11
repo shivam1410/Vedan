@@ -1,6 +1,30 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
+// imported fonts
+// @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+
+@font-face {
+  font-family: 'Ubuntu';
+  src: url('../assets/fonts/Ubuntu-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Pacifico';
+  src: url('../assets/fonts/Pacifico-Regular.ttf')  format('truetype');
+}
+
+$font-family-md-base: 'Ubuntu';
+
+:root,
+:root[mode="md"],
+:root[mode="ios"] {
+	--ion-font-family: 'Ubuntu', sans-serif;
+	font-family: var(--ion-font-family) !important;
+}
+
 /** Ionic CSS Variables **/
 :root {
   /** primary **/
