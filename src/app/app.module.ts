@@ -14,6 +14,8 @@ import { AppRoutingModule } from './app-routing.module';
 //hammerjs
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import * as Hammer from 'hammerjs';
+import { ToastrService } from './service/toastr.service';
+import { AlertService } from './service/alert.service';
 
 export class HammerConfig extends HammerGestureConfig {
   buildHammer(element: HTMLElement) {
@@ -39,6 +41,8 @@ export class HammerConfig extends HammerGestureConfig {
   providers: [
     StatusBar,
     SplashScreen,
+    ToastrService,
+    AlertService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: HAMMER_GESTURE_CONFIG,useClass: HammerConfig}  ],
   bootstrap: [AppComponent],

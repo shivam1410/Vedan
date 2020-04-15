@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { File, Entry } from '@ionic-native/file/ngx';
-import { AlertController, ToastController, Platform, Events} from '@ionic/angular'
+import { Platform, Events} from '@ionic/angular'
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer/ngx';
 
@@ -12,6 +12,9 @@ import { CreateShelfComponent } from './create-shelf/create-shelf.component';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { FileService } from './service/file.service';
+import { ToastrService } from '../service/toastr.service';
+import { AlertService } from '../service/alert.service';
 
 @Component({
   selector: 'app-home',
@@ -31,8 +34,6 @@ export class HomePage implements OnInit {
   spinner: boolean = false;
   constructor(
     private file: File,
-    private toast:ToastController,
-    private alertctrl:AlertController,
     private platform:Platform,
     private router: Router,
     private route: ActivatedRoute,
@@ -43,6 +44,9 @@ export class HomePage implements OnInit {
     private diagnostic: Diagnostic,
     private fileOpener: FileOpener,
     private socialSharing: SocialSharing,
+    private fileService: FileService,
+    private toastr: ToastrService,
+    private alert: AlertService
   ) {
     this.spinner = true;
    }
@@ -75,7 +79,7 @@ export class HomePage implements OnInit {
           if(counter<2){
             counter++;
             if(counter==2){
-              this.createToast("Press 1 more time to exit");
+              this.toastr.show("Press 1 more time to exit");
             }
             setTimeout(() => { 
               counter = 0 }, 2000);
@@ -141,7 +145,7 @@ export class HomePage implements OnInit {
     .catch(e=> console.error(e))
   }
   network(){
-    this.createToast("Network not Created now");
+    this.toastr.show("Network not Created now");
   }
   openTrash(){
     
@@ -196,19 +200,8 @@ export class HomePage implements OnInit {
 
   //main function to list all directries and files
   listDir(shouldHide = true) {
-    this.file.listDir(this.baseFS, this.folder).then(entries => {
-      if(shouldHide) {
-        this.items = [];
-        entries.forEach(data=>{
-          if(data.name[0] !== '.'){
-            this.items.push(data);
-          }
-        })
-      }
-      else {
-        this.items = entries;
-      }
-      this.items.sort((a,b)=> b.isDirectory - a.isDirectory)
+    this.fileService.listDirectories(this.baseFS,this.folder,shouldHide).then(data=>{
+      this.items = data;
       this.spinner = false;
     })
   }
@@ -301,7 +294,7 @@ export class HomePage implements OnInit {
         this.renameFile(file);
       }
       if(data.data === "move"){
-        this.copyItem(ev,file,true,false)
+        this.copyItem(ev,file,true,false,this.baseFS,this.folder)
       }
     })
   
@@ -319,13 +312,12 @@ export class HomePage implements OnInit {
     });
     const path = this.baseFS + '/' + this.folder + '/';
       popover.onDidDismiss().then((data)=>{
-        this.spinner = true;
-        if(data.data && data.data != f.name){       
+        if(data.data && data.data != f.name){      
+          this.spinner = true;
           if(f.isDirectory){
             this.file.moveDir(path,f.name,path,data.data)
             .then(d=>{
               this.listDir();
-              this.spinner = false;
             })
             .catch(e=>{
               console.error("file not rename")
@@ -336,7 +328,6 @@ export class HomePage implements OnInit {
             this.file.moveFile(path,f.name,path,data.data)
             .then(d=>{
               this.listDir();
-              this.spinner = false;
             })
             .catch(e=>{
               console.error("file not rename")
@@ -362,7 +353,7 @@ export class HomePage implements OnInit {
         this.file.createDir(path,shelfName,false)
         .then(()=>{
           this.listDir();
-          this.createToast("Shelf Created")
+          this.toastr.show("Shelf Created")
         })
         .catch(e=>{
           console.error("Error in creating DIrectory");
@@ -384,8 +375,12 @@ export class HomePage implements OnInit {
   //copy,move Multiple files
   copyMultiple(ev,moveFile = false){
     const copyfiles: Entry[] = Object.values(this.selectedFilesMap);
-    this.copyItem(ev,copyfiles,moveFile,true);
-
+    this.copyItem(ev,copyfiles,moveFile,true,this.baseFS,this.folder)
+    .finally(()=>{
+      console.log('data')
+      this.discardLongPressOptions();
+      this.listDir();
+    })
   }
 
 //import items from other loacation(internal,sdCard)
@@ -411,13 +406,13 @@ export class HomePage implements OnInit {
         let j=0;
         this.spinner = true;
         copyFileArray.forEach(f=>{
-          this.debugCopying(copyPath,f,newPath,false)
+          this.fileService.debugCopying(copyPath,f,newPath,false)
           .then(()=>{ 
             i++;
             if(i+j === copyFileArray.length){
               this.listDir();
-              if(i)this.createToast(`${i} Items imported`);
-              if(j)this.createToast(`${j} Items Failed`);
+              if(i)this.toastr.show(`${i} Items imported`);
+              if(j)this.toastr.show(`${j} Items Failed`);
               this.spinner = false;
             }
           })
@@ -425,8 +420,8 @@ export class HomePage implements OnInit {
             j++;
             if(i+j === copyFileArray.length){
               this.listDir();
-              if(i)this.createToast(`${i} Items imported`);
-              if(j)this.createToast(`${j} Items Failed`);
+              if(i)this.toastr.show(`${i} Items imported`);
+              if(j)this.toastr.show(`${j} Items Failed`);
               this.spinner = false;
             }
           })
@@ -436,8 +431,7 @@ export class HomePage implements OnInit {
 
     return await popover.present();
   }
-
-  //create popover for copy/move files
+  
   async copyItem(ev,file, moveFile = false,multipleCopy = false){
     const copyPath = this.baseFS + '/' + this.folder + '/';
   
@@ -454,13 +448,13 @@ export class HomePage implements OnInit {
     this.events.subscribe('filecopied',()=>{
       popover.onDidDismiss().then(data=>{
         if(!multipleCopy){
-            this.debugCopying(copyPath,file,data.data,moveFile)
+            this.fileService.debugCopying(copyPath,file,data.data,moveFile)
             .then(()=>{
               this.listDir()
               if(moveFile){
-                this.createToast("Moved")
+                this.toastr.show("Moved")
               } else {
-                this.createToast("Copied")
+                this.toastr.show("Copied")
               }
             })
             .catch(e =>{
@@ -472,17 +466,17 @@ export class HomePage implements OnInit {
           let j = 0;
           this.spinner = true;
           file.forEach(f=>{
-            this.debugCopying(copyPath,f,data.data,moveFile)
+            this.fileService.debugCopying(copyPath,f,data.data,moveFile)
             .then(()=>{ 
               i++;
               if(i+j === file.length){
                 this.listDir();
                 if(moveFile){
-                  if(i)this.createToast(`${i} items Moved`)
-                  if(j)this.createToast(`${j} Items Failed`);
+                  if(i)this.toastr.show(`${i} items Moved`)
+                  if(j)this.toastr.show.toastr.show(`${j} Items Failed`);
                 } else {
-                  if(i)this.createToast(`${i} items Moved`)
-                  if(j)this.createToast(`${j} Items Failed`);
+                  if(i)this.toastr.show(`${i} items Moved`)
+                  if(j)this(`${j} Items Failed`);
                 }
                 this.spinner = false;
               }
@@ -492,11 +486,11 @@ export class HomePage implements OnInit {
               if(i+j === file.length){
                 this.listDir();
                 if(moveFile){
-                  if(i)this.createToast(`${i} items Moved`)
-                  if(j)this.createToast(`${j} Items Failed`);
+                  if(i)this.toastr.show(`${i} items Moved`)
+                  if(j)this.toastr.show(`${j} Items Failed`);
                 } else {
-                  if(i)this.createToast(`${i} items Moved`)
-                  if(j)this.createToast(`${j} Items Failed`);
+                  if(i)this.toastr.show(`${i} items Moved`)
+                  if(j)this.toastr.show(`${j} Items Failed`);
                 }
                 this.spinner = false;
               }
@@ -508,27 +502,6 @@ export class HomePage implements OnInit {
     })
     return await popover.present();
   }
-
-  //main function to copy,move single file
-  debugCopying(path,copyFile,newpath,shouldMove) {
-    if(shouldMove) {
-      if(copyFile.isDirectory){
-        return this.file.moveDir(path,copyFile.name,newpath,'')
-      } 
-      else {
-        return this.file.moveFile(path,copyFile.name,newpath,'')
-      }
-    } 
-    else {
-      if(copyFile.isDirectory){
-        return this.file.copyDir(path,copyFile.name,newpath,'')
-      } 
-      else {
-        return this.file.copyFile(path,copyFile.name,newpath,'')
-      }
-    }
-  }  
-  
   //deleting functions
   //alert for deleting single file to bin
   moveSingleToBin(removeFile:Entry){
@@ -556,7 +529,7 @@ export class HomePage implements OnInit {
         }
       }
     ]
-    this.createAlert(header,message,buttons);
+    this.alert.show(header,message,buttons);
   }
 
    //alert for deleting multiple files to bin
@@ -583,7 +556,7 @@ export class HomePage implements OnInit {
         }
       }
     ]
-    this.createAlert(header,message,buttons)
+    this.alert.show(header,message,buttons)
   }
 
   //ain function to move files to bin
@@ -596,7 +569,7 @@ export class HomePage implements OnInit {
       this.file.moveDir(path,removeFile.name,newpath,'')
       .then(()=>{
         this.listDir()
-        this.createToast("Shelf Removed")
+        this.toastr.show("Shelf Removed")
       })
       .catch(e =>{
         console.error(e.message);
@@ -606,7 +579,7 @@ export class HomePage implements OnInit {
       this.file.moveFile(path,removeFile.name,newpath,'')
       .then(()=>{
         this.listDir()
-        this.createToast("book Removed")
+        this.toastr.show("book Removed")
       })
       .catch(e =>{
         console.error(e.message);
@@ -645,7 +618,7 @@ export class HomePage implements OnInit {
     .then(()=>{
       this.folder = 'Books';
       this.location = 'home'
-      this.createToast("Trash Cleared")
+      this.toastr.show("Trash Cleared")
       this.spinner = false;
       this.listDir();
     })
@@ -654,24 +627,6 @@ export class HomePage implements OnInit {
     })
    }
 
-   async createToast(str){
-    const toast = await this.toast.create({
-      message: str,
-      duration: 2000,
-      position: 'middle'
-    });
-    toast.present();
-  }
-
-   async createAlert(header,message,buttons){
-    const alert = await this.alertctrl.create({
-     header: header,
-     message: message,
-     buttons: buttons
-   });
-
-   await alert.present();
-  }
   
   shareFile(file:Entry){
 
