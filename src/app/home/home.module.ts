@@ -20,6 +20,7 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { FilterItemsPipe } from './pipe/filter-items.pipe';
 import { SplitTopPipe } from './pipe/split-top.pipe';
 import { FileService } from './service/file.service';
+import { BookService } from './service/book.service';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { FileService } from './service/file.service';
     FileOpener,
     FileTransfer,  FileTransferObject,
     DocumentViewer,MenuController,StatusBar,PopoverController,
-    Diagnostic, SocialSharing, FileService
+    Diagnostic, SocialSharing, 
+    FileService, BookService,
   ],
   declarations: [HomePage,PopoverComponent,CopyComponent,CreateShelfComponent, FilterItemsPipe, SplitTopPipe],
   entryComponents: [PopoverComponent,CopyComponent,CreateShelfComponent]

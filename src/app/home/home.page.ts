@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { File, Entry } from '@ionic-native/file/ngx';
 import { Platform, Events} from '@ionic/angular'
 import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer/ngx';
 
 import { MenuController } from '@ionic/angular';
 import { PopoverController } from '@ionic/angular';
@@ -10,11 +9,10 @@ import {  PopoverComponent } from '../home/popover/popover.component'
 import { CopyComponent } from './copy/copy.component';
 import { CreateShelfComponent } from './create-shelf/create-shelf.component';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
-import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { FileService } from './service/file.service';
 import { ToastrService } from '../service/toastr.service';
 import { AlertService } from '../service/alert.service';
+import { BookService } from './service/book.service';
 
 @Component({
   selector: 'app-home',
@@ -37,16 +35,14 @@ export class HomePage implements OnInit {
     private platform:Platform,
     private router: Router,
     private route: ActivatedRoute,
-    private document: DocumentViewer,
     private menu: MenuController,
     public popoverController: PopoverController,
     private events: Events,
     private diagnostic: Diagnostic,
-    private fileOpener: FileOpener,
-    private socialSharing: SocialSharing,
     private fileService: FileService,
     private toastr: ToastrService,
-    private alert: AlertService
+    private alert: AlertService,
+    private bookService: BookService,
   ) {
     this.spinner = true;
    }
@@ -210,11 +206,8 @@ export class HomePage implements OnInit {
   //on single click, to enter or open
   itemClicked(file: Entry,i) {
     if(!Object.keys(this.selectedFilesMap).length){
-      if(file.isFile){  
-        const options: DocumentViewerOptions = {
-          title: file.name
-        }
-        this.document.viewDocument(file.nativeURL, 'application/pdf', options);
+      if(file.isFile){
+        this.bookService.open(file);
       }
       else {
         const path = this.folder != '' ? this.folder + '/' + file.name : file.name;
@@ -367,11 +360,12 @@ export class HomePage implements OnInit {
   //modification options => copy,move,paste,openwith delete
   //openWith another application other then cleverdox viewer
   openWith(file:Entry){
-    if(file.isFile){
-      this.fileOpener.showOpenWithDialog(file.nativeURL, 'application/pdf')
-    }
+    this.bookService.openWith(file);
   }
 
+  shareFile(file){
+    this.bookService.share(file);
+  }
   //copy,move Multiple files
   copyMultiple(ev,moveFile = false){
     const copyfiles: Entry[] = Object.values(this.selectedFilesMap);
@@ -385,8 +379,6 @@ export class HomePage implements OnInit {
 
 //import items from other loacation(internal,sdCard)
   async importItems(ev){
-    // const newpath;
-    // const oldpa
     const popover = await this.popoverController.create({
       component: CopyComponent,
       event: ev,
@@ -432,8 +424,8 @@ export class HomePage implements OnInit {
     return await popover.present();
   }
   
-  async copyItem(ev,file, moveFile = false,multipleCopy = false){
-    const copyPath = this.baseFS + '/' + this.folder + '/';
+  async copyItem(ev,file, moveFile = false,multipleCopy = false,baseFS,folder){
+    const copyPath = baseFS + '/' + folder + '/';
   
     const popover = await this.popoverController.create({
       component: CopyComponent,
@@ -473,10 +465,10 @@ export class HomePage implements OnInit {
                 this.listDir();
                 if(moveFile){
                   if(i)this.toastr.show(`${i} items Moved`)
-                  if(j)this.toastr.show.toastr.show(`${j} Items Failed`);
+                  if(j)this.toastr.show(`${j} Items Failed`);
                 } else {
                   if(i)this.toastr.show(`${i} items Moved`)
-                  if(j)this(`${j} Items Failed`);
+                  if(j)this.toastr.show(`${j} Items Failed`);
                 }
                 this.spinner = false;
               }
@@ -626,15 +618,6 @@ export class HomePage implements OnInit {
       console.error(e)
     })
    }
-
-  
-  shareFile(file:Entry){
-
-    this.socialSharing.share('','',file.nativeURL)
-    .catch(e=>{
-      console.error("failure");
-    })
-  }
 
 }
 
