@@ -8,6 +8,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 
 
@@ -16,6 +17,8 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG} from '@angular/platform-bro
 import * as Hammer from 'hammerjs';
 import { ToastrService } from './service/toastr.service';
 import { AlertService } from './service/alert.service';
+import { BookComponent } from './book/book.component';
+import { File } from '@ionic-native/file/ngx';
 
 export class HammerConfig extends HammerGestureConfig {
   buildHammer(element: HTMLElement) {
@@ -35,11 +38,16 @@ export class HammerConfig extends HammerGestureConfig {
 }
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    BookComponent,
+  ],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
   providers: [
     StatusBar,
+    WebView,
+    File,
     SplashScreen,
     ToastrService,
     AlertService,

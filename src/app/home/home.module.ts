@@ -28,7 +28,7 @@ import { BookService } from './service/book.service';
     FormsModule,
     IonicModule,
     RouterModule.forChild([
-      { path: '', component: HomePage},
+      { path: '', component: HomePage}, 
       {path: 'copy', component: CopyComponent},
       {path: 'copy/:folder', component: CopyComponent}
     ]),

@@ -53,7 +53,7 @@ export class HomePage implements OnInit {
         this.baseFS = this.route.snapshot.paramMap.get('baseFS') || this.file.externalRootDirectory;
         this.folder = this.route.snapshot.paramMap.get('folder') || 'Books';
         this.location = this.route.snapshot.paramMap.get('location') || 'home';
-        
+
         if(this.folder == 'Books')
         {
           this.file.checkDir(this.baseFS,this.folder)
