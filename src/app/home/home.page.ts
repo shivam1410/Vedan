@@ -13,6 +13,7 @@ import { FileService } from './service/file.service';
 import { ToastrService } from '../service/toastr.service';
 import { AlertService } from '../service/alert.service';
 import { BookService } from './service/book.service';
+import { NightmodeService } from '../service/nightmode.service';
 
 @Component({
   selector: 'app-home',
@@ -43,6 +44,7 @@ export class HomePage implements OnInit {
     private toastr: ToastrService,
     private alert: AlertService,
     private bookService: BookService,
+    private nightMd: NightmodeService,
   ) {
     this.spinner = true;
    }
@@ -50,6 +52,7 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.spinner = true;
     this.platform.ready().then(() => {
+      this.nightMd.toggleDarkMode(true);
         this.baseFS = this.route.snapshot.paramMap.get('baseFS') || this.file.externalRootDirectory;
         this.folder = this.route.snapshot.paramMap.get('folder') || 'Books';
         this.location = this.route.snapshot.paramMap.get('location') || 'home';
@@ -177,7 +180,7 @@ export class HomePage implements OnInit {
     this.events.subscribe('nightmodechanged',()=>{
       popover.onDidDismiss().then((data)=>{
         this.nightmode = data.data;
-        // this.toggleDarkMode(data.data)
+        this.nightMd.toggleDarkMode(data.data)
       })
     })
     this.events.subscribe('createNewShelf',()=>{
@@ -298,6 +301,7 @@ export class HomePage implements OnInit {
     const popover = await this.popoverController.create({
       component: CreateShelfComponent,
       translucent: false,
+      cssClass : 'create-shelf-popover',
       componentProps:{
         rename: true,
         filename: f.name
@@ -335,6 +339,7 @@ export class HomePage implements OnInit {
   async createNewShelf(){
     const popover = await this.popoverController.create({
       component: CreateShelfComponent,
+      cssClass : 'create-shelf-popover',
       translucent: false,
     });
     
@@ -620,34 +625,3 @@ export class HomePage implements OnInit {
    }
 
 }
-
-
-// toggleDarkMode(nightmode){
-
-  // // Query for the toggle that is used to change between themes
-  // const toggle = nightmode
-
-  // // Listen for the toggle check/uncheck to toggle the dark class on the <body>
-  // toggle.addEventListener('ionChange', (ev) => {
-  //   document.body.classList.toggle('dark', ev.detail.checked);
-  // });
-
-  // const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-
-  // // Listen for changes to the prefers-color-scheme media query
-  // prefersDark.addListener((e) => checkToggle(e.matches));
-
-  // // Called when the app loads
-  // function loadApp() {
-  //   checkToggle(prefersDark.matches);
-  // }
-
-  // // Called by the media query to check/uncheck the toggle
-  // function checkToggle(shouldCheck) {
-  //   toggle.checked = shouldCheck;
-  // }
-
-  // if(nightmode){
-    
-  // }
-// }

@@ -2,13 +2,13 @@
   <div style="width: 10%;">
     <ion-icon *ngIf="folderStack.length > 1 && shouldImport" class="arrow-round-back" name="home" slot="start" (click)="home()"></ion-icon>
     <ion-icon *ngIf="folderStack.length > 1 && !shouldImport" class="arrow-round-back" name="home" slot="start" (click)="setHomeForCopyyingDialog()"></ion-icon>
-</div>
- <div class="dialog-header-child">
-  <ion-label *ngIf="!shouldmove && !shouldImport">Copy to</ion-label>  
-  <ion-label *ngIf="shouldmove && !shouldImport">Move to</ion-label>
-  <ion-label *ngIf="shouldImport">Import from</ion-label>
-  <ion-icon  *ngIf="(selectedFilesMap | json) != '{}'" class="checkmark-circle" name="checkmark-circle" slot="end" (click)="selectAll()"></ion-icon>
-  <ion-icon  *ngIf="!shouldImport && location != 'home'" class="add" name="add" slot="end" (click)="createNewShelf()"></ion-icon>
+  </div>
+  <div class="dialog-header-child">
+    <ion-label *ngIf="!shouldmove && !shouldImport">Copy to</ion-label>  
+    <ion-label *ngIf="shouldmove && !shouldImport">Move to</ion-label>
+    <ion-label *ngIf="shouldImport">Import from</ion-label>
+    <ion-icon  *ngIf="(selectedFilesMap | json) != '{}'" class="checkmark-circle" name="checkmark-circle" slot="end" (click)="selectAll()"></ion-icon>
+    <ion-icon  *ngIf="!shouldImport && location != 'home'" class="add" name="add" slot="end" (click)="createNewShelf()"></ion-icon>
  </div>
 </div>
 <!-- when used as copy paste dialog -->
@@ -60,10 +60,10 @@
   <ion-grid class="buttons">
     <ion-row>
       <ion-col>
-        <ion-button *ngIf="!shouldImport"  class="paste-button" expand="full" (click)="finishCopyFile()">
+        <ion-button *ngIf="!shouldImport" expand="full" (click)="finishCopyFile()">
           <ion-label>Keep Here</ion-label>
         </ion-button>   
-        <ion-button [disabled]="(selectedFilesMap | json) === '{}'" *ngIf="shouldImport" class="paste-button" expand="full" (click)="finishImport()">
+        <ion-button [disabled]="(selectedFilesMap | json) === '{}'" *ngIf="shouldImport" expand="full" (click)="finishImport()">
           <ion-label>Import</ion-label>
         </ion-button>    
       </ion-col>

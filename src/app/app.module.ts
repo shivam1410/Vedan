@@ -8,7 +8,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-
+import { NavigationBar } from '@ionic-native/navigation-bar/ngx';
 
 
 //hammerjs
@@ -43,6 +43,7 @@ export class HammerConfig extends HammerGestureConfig {
     SplashScreen,
     ToastrService,
     AlertService,
+    NavigationBar,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: HAMMER_GESTURE_CONFIG,useClass: HammerConfig}  ],
   bootstrap: [AppComponent],

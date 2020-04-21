@@ -9,7 +9,6 @@ import { HomePage } from './home.page';
 import { File } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
-import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
 import { MenuController } from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { PopoverComponent } from './popover/popover.component';
@@ -21,6 +20,8 @@ import { FilterItemsPipe } from './pipe/filter-items.pipe';
 import { SplitTopPipe } from './pipe/split-top.pipe';
 import { FileService } from './service/file.service';
 import { BookService } from './service/book.service';
+import { MusicControls } from '@ionic-native/music-controls/ngx'
+import { MusicService } from './service/music.service';
 
 @NgModule({
   imports: [
@@ -36,12 +37,29 @@ import { BookService } from './service/book.service';
   providers: [
     File,
     FileOpener,
-    FileTransfer,  FileTransferObject,
-    DocumentViewer,MenuController,StatusBar,PopoverController,
-    Diagnostic, SocialSharing, 
-    FileService, BookService,
+    FileTransfer,
+    FileTransferObject,
+    MenuController,
+    StatusBar,
+    PopoverController,
+    Diagnostic, 
+    SocialSharing, 
+    MusicControls,
+    FileService,
+    BookService,
+    MusicService,
   ],
-  declarations: [HomePage,PopoverComponent,CopyComponent,CreateShelfComponent, FilterItemsPipe, SplitTopPipe],
-  entryComponents: [PopoverComponent,CopyComponent,CreateShelfComponent]
+  declarations: [HomePage,
+    PopoverComponent,
+    CopyComponent,
+    CreateShelfComponent,
+    FilterItemsPipe,
+    SplitTopPipe
+  ],
+  entryComponents: [
+    PopoverComponent,
+    CopyComponent,
+    CreateShelfComponent
+  ]
 })
 export class HomePageModule {}

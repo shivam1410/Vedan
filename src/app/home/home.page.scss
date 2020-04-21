@@ -1,12 +1,12 @@
-ion-title{
+.app-logo{
     font-family: 'Pacifico', cursive;
     font-size: 24px;
 }
 .my-custom-menu {
     --width: 250px;
     ion-list{
-        .fs-selected{
-            --background: var(--ion-color-purple-900);
+        .fs-selected{   
+            --background: var(--ion-menu-list-activated);
             --color: #ffffff;
             ion-icon{
                 color: white;
@@ -19,7 +19,7 @@ ion-title{
     
   }
   ion-toolbar{
-      --background: var(--ion-color-purple-900);
+      --background: var(--ion-header-background-color);
       --color: #ffffff;
   }
 .header{
@@ -42,7 +42,7 @@ ion-title{
     overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
-    background: var(--ion-color-purple-900);
+    background: var(--ion-header-background-color);
     .forward-button{
         height: 120px;
         display: flex;
@@ -68,8 +68,8 @@ ion-title{
             display: flex;
             position: relative;
             overflow: hidden;
-            --background-activated: var(--ion-color-purple-100);
-            --ion-item-background-activated:  var(--ion-color-purple-100);
+            --background-activated: var(--ion-list-activated);
+            --ion-item-background-activated:  var(--ion-list-activated);
             ion-icon{
                 color: var(--ion-color-purple-300);
                 font-size: 32px;
@@ -88,11 +88,11 @@ ion-title{
             padding: 0px 10px;
         }
     .activated-item{
-        --background: var(--ion-color-purple-50);
+        --background: var(--ion-list-activated);
     }
     .file{
         ion-icon{
-            color: var(--ion-color-purple-900);
+            color: var(--ion-icon-file-color);
             font-size: 32px;
         }
     }
@@ -111,7 +111,6 @@ ion-title{
     }
 }
 .long-press-options{
-    
     position: fixed;
     bottom: 30px;
     left: 10%;
@@ -121,8 +120,6 @@ ion-title{
     border-radius: 30px;
     font-size: 27px;
     padding: 3px;
-    background: var(--ion-color-purple-50);
-    color: var(--ion-color-purple-700);
     box-shadow: 0 14px 28px rgba(0,0,0,0.30), 0 10px 10px rgba(0,0,0,0.22);
 
     .logic-buttons{
@@ -134,7 +131,6 @@ ion-title{
     }
     .close-button{
         padding: 14px;
-        background: var(--ion-color-purple-700);
         color: #ffffff;
         width: 19%;
         border-radius: 30px;

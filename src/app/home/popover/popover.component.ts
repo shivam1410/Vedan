@@ -26,7 +26,7 @@ export class PopoverComponent {
         this.popoverController.dismiss('move');
     }
 
-    async rename(){
+    rename(){
         this.popoverController.dismiss('rename')
     }
 

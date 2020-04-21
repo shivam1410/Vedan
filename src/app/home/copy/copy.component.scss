@@ -1,5 +1,6 @@
 
 .dialog-header{
+    color: var(--ion-dialog-header-color);
     width: 100%;
     position:absolute; 
     top:0px; 
@@ -8,7 +9,6 @@
     justify-content: space-between;
     padding: 0px 20px;
     align-items: center;
-    color: var(--ion-color-purple-900);
     ion-icon{
         font-size: 27px;
     }
@@ -40,7 +40,7 @@
         margin-right: 16px;
     }
     .activated-item{
-        --background: var(--ion-color-purple-50);
+        --background: var(--ion-list-activated);
     }
 }
 .footer{

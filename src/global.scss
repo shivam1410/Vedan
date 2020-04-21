@@ -30,12 +30,17 @@
   top: 70px !important;
   left: 30px !important;
   bottom: 70px !important;
+  --background: var(--ion-popover-background) !important;
+  // --box-shadow:
 }
 .option-popover .popover-content {
   width: 145px;
+  --background: var(--ion-popover-background) !important;
 }
 
-
+.create-shelf-popover{
+  --background: var(--ion-popover-background) !important;
+}
 ion-spinner{
   --color: var(--ion-color-purple-800);
 }

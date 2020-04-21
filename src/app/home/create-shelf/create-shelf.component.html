@@ -10,8 +10,8 @@
     <ion-grid class="buttons">
         <ion-row>
         <ion-col>
-            <ion-button *ngIf="ren" [disabled]="!shelfName" class="paste-button" expand="full" (click)="createShelf()">RENAME</ion-button>      
-            <ion-button *ngIf="!ren" [disabled]="!shelfName" class="paste-button" expand="full" (click)="createShelf()">ADD</ion-button>      
+            <ion-button *ngIf="ren" [disabled]="!shelfName" expand="full" (click)="createShelf()">RENAME</ion-button>      
+            <ion-button *ngIf="!ren" [disabled]="!shelfName" expand="full" (click)="createShelf()">ADD</ion-button>      
         </ion-col>
         <ion-col class="cancel">
             <ion-button expand="full" (click)="close()">CANCEL</ion-button>      

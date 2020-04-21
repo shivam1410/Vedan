@@ -22,17 +22,26 @@ export class FileService {
   public showSpinner:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   listDirectories(baseFS,folder,shouldHide){
-    return this.file.listDir(baseFS,folder).then((entries) => {
+    return this.file.listDir(baseFS,folder).then((entries:  Array<any>) => {
       let items = [];
       if(shouldHide) {
         entries.forEach(data=>{
+          data.getMetadata(m=>{
+            data.modificationTime = m.modificationTime
+            data.size = m.size;
+          })
           if(data.name[0] !== '.'){
             items.push(data);
           }
         })
       }
       else {
-        items = entries;
+        entries.forEach(data=>{
+          data.getMetadata(m=>{
+            data.modificationTime = m.modificationTime
+            data.size = m.size;
+          })
+        })
       }
       items.sort((a,b)=> b.isDirectory - a.isDirectory)
       items.sort((a,b) => this.alphaSort(a,b))
