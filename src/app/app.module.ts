@@ -9,6 +9,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { NavigationBar } from '@ionic-native/navigation-bar/ngx';
+import { WebServer } from '@ionic-native/web-server/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 
 //hammerjs
@@ -37,13 +39,19 @@ export class HammerConfig extends HammerGestureConfig {
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+  ],
   providers: [
     StatusBar,
     SplashScreen,
     ToastrService,
     AlertService,
     NavigationBar,
+    AndroidPermissions,
+    WebServer,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: HAMMER_GESTURE_CONFIG,useClass: HammerConfig}  ],
   bootstrap: [AppComponent],

@@ -41,6 +41,32 @@
 .create-shelf-popover{
   --background: var(--ion-popover-background) !important;
 }
+
+.alert-class{
+  --background: var(--ion-popover-background) !important;
+  padding: 0px;
+  width: 100%;
+  .alert-button-group{
+    padding: 0;
+  }
+  .alert-cancel-button{
+    color: #fff;
+    background: var(--ion-color-purple-600);
+    width: 50%;
+    margin: 0;
+    height: 36px;
+    padding: 0px 15%;
+  }
+  .alert-sure-button{
+    color: #fff;
+    background: var(--ion-color-purple-600);
+    width: 50%;
+    height: 36px;
+    margin: 0;
+    padding: 0px 20%;
+  }
+}
+
 ion-spinner{
   --color: var(--ion-color-purple-800);
 }

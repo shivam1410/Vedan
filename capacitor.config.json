@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "IonicPDF",
+  "appId": "io.ionic.vedan",
+  "appName": "Veadan",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

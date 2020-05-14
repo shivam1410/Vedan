@@ -6,21 +6,23 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 })
 export class NightmodeService {
 
-  nightmode:Boolean;
+  nightmode:boolean;
   constructor(
     private statusBar: StatusBar,
   ) { }
 
-  toggleDarkMode(night){
+  toggleDarkMode(night:boolean){
+    console.log(night)
     this.nightmode = night
     if(night){
       document.body.setAttribute('data-theme', 'dark');
       this.statusBar.backgroundColorByHexString('#121212');
+      localStorage.setItem("dark","true")
     }
     else{
       document.body.setAttribute('data-theme', 'light');
-      this.statusBar.backgroundColorByHexString('##311b92');
-
+      this.statusBar.backgroundColorByHexString('#311b92');
+      localStorage.setItem("dark","false")
     }
   }
   checkMode(){

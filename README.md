@@ -33,14 +33,19 @@ creating the apk can be trick part
 </br>
 
 ## ScreenShots
-![Main Home](/src/assets/Screenshot_20200318-152719.jpg?raw=true "Title")
-![alt text](/src/assets/Screenshot_20200318-152733.jpg?raw=true "Title")
-![alt text](/src/assets/Screenshot_20200318-152738.jpg?raw=true "Title")
-![alt text](/src/assets/Screenshot_20200318-182206.jpg?raw=true "Title")
-![alt text](/src/assets/Screenshot_20200318-182212.jpg?raw=true "Title")
-![alt text](/src/assets/Screenshot_20200318-101604.jpg?raw=true "Title")
-![alt text](/src/assets/Screenshot_20200318-152825.jpg?raw=true "Title")
-![alt text](/src/assets/Screenshot_20200318-182224.jpg?raw=true "Title")
+![Main Home](/src/assets/dark_create_folder.jpg?raw=true "Title")
+![alt text](/src/assets/dark_home_select.jpg?raw=true "Title")
+![alt text](/src/assets/dark_import-2.jpg?raw=true "Title")
+![alt text](/src/assets/dark_import.jpg?raw=true "Title")
+![alt text](/src/assets/dark_side_view.jpg?raw=true "Title")
+![alt text](/src/assets/dark_slide_options.jpg?raw=true "Title")
+![alt text](/src/assets/dark_trash.jpg?raw=true "Title")
+![alt text](/src/assets/light_create_folder.jpg?raw=true "Title")
+![alt text](/src/assets/light_home_select.jpg?raw=true "Title")
+![alt text](/src/assets/light_import-2.jpg?raw=true "Title")
+![alt text](/src/assets/light_import.jpg?raw=true "Title")
+![alt text](/src/assets/light_side_view.jpg?raw=true "Title")
+![alt text](/src/assets/light_trash.jpg?raw=true "Title")
 </br>
 
 ## References

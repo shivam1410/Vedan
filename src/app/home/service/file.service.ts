@@ -19,17 +19,13 @@ export class FileService {
     private alert: AlertService,
   ) { }
 
-  public showSpinner:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public _showSpinner:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   listDirectories(baseFS,folder,shouldHide){
     return this.file.listDir(baseFS,folder).then((entries:  Array<any>) => {
       let items = [];
       if(shouldHide) {
         entries.forEach(data=>{
-          data.getMetadata(m=>{
-            data.modificationTime = m.modificationTime
-            data.size = m.size;
-          })
           if(data.name[0] !== '.'){
             items.push(data);
           }
@@ -37,19 +33,29 @@ export class FileService {
       }
       else {
         entries.forEach(data=>{
-          data.getMetadata(m=>{
-            data.modificationTime = m.modificationTime
-            data.size = m.size;
-          })
+          items.push(data);
         })
       }
       items.sort((a,b)=> b.isDirectory - a.isDirectory)
       items.sort((a,b) => this.alphaSort(a,b))
-      this.showSpinner.next(false);
+      this._showSpinner.next(false);
       return items;
     })
   }
 
+  // data.getMetadata(m=>{
+  //   console.log('modification', + new Date())
+  //   var d = new Date(m.modificationTime);
+  //   var date = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
+  //   var time = d.getHours()>12 ?
+  //     (d.getHours()-12) + ':' + d.getMinutes() + ' ' + 'pm' :
+  //     (d.getHours()) + ':' + d.getMinutes() + ' ' + 'am';
+  //     data = {
+  //       ...data,
+  //       modificationTime : date + ' ' + time,
+  //       size : m.size
+  //     }
+  // })
   alphaSort(a,b){
     const bandA = a.name.toUpperCase();
     const bandB = b.name.toUpperCase();
@@ -105,7 +111,7 @@ export class FileService {
         else{
           let i = 0;
           let j = 0;
-          this.showSpinner.next(true);
+          this._showSpinner.next(true);
           file.forEach(f=>{
             this.debugCopying(copyPath,f,data.data,moveFile)
             .then(()=>{ 
@@ -119,7 +125,7 @@ export class FileService {
                   if(i)this.toastr.show(`${i} items Copied`)
                   if(j)this.toastr.show(`${j} Items Failed`);
                 }
-                this.showSpinner.next(false);
+                this._showSpinner.next(false);
               }
             })
             .catch(e=>{
@@ -133,7 +139,7 @@ export class FileService {
                   if(i)this.toastr.show(`${i} items Copied`)
                   if(j)this.toastr.show(`${j} Items Failed`);
                 }
-                this.showSpinner.next(false);
+                this._showSpinner.next(false);
               }
             })
           })

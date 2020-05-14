@@ -107,9 +107,23 @@ export class CopyComponent {
         })
       })
       this.items.sort((a,b)=> b.isDirectory - a.isDirectory)
+      this.items.sort((a,b) => this.alphaSort(a,b))
+      
     })
   }
+  alphaSort(a,b){
+    const bandA = a.name.toUpperCase();
+    const bandB = b.name.toUpperCase();
 
+    let comp = 0;
+    if(bandA > bandB){
+      comp = 1;
+    }
+    if(bandB > bandA){
+      comp = -1;
+    }
+    return comp;
+  }
 //single click
   itemClicked(file: Entry,i=null) {
 
@@ -129,6 +143,7 @@ export class CopyComponent {
     const createShelfPopover = await this.popovercontroller.create({
       component: CreateShelfComponent,
       translucent: false,
+      cssClass : 'create-shelf-popover',
     });
     
     this.events.subscribe('shelfAdded',()=>{
@@ -138,7 +153,6 @@ export class CopyComponent {
         const path = this.baseFS + '/' + this.folder;
         this.file.createDir(path,shelfName,false)
         .then(data=>{
-          this.folder += '/' + data.name;
           this.listDir();
         })
         .catch(e=>{

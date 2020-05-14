@@ -14,7 +14,8 @@ export class AlertService {
     const alert = await this.alertctrl.create({
      header: header,
      message: message,
-     buttons: buttons
+     buttons: buttons,
+     cssClass: 'alert-class'
    });
 
    await alert.present();

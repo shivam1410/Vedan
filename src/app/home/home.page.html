@@ -20,6 +20,12 @@
           Internal storage
         </ion-label>
       </ion-item>
+      <ion-item [ngClass]="{'fs-selected' : location == 'Download'}" (click)="setLocation('Download');">
+        <ion-icon name="md-download" slot="start"></ion-icon>
+        <ion-label>
+          Downloads
+        </ion-label>
+      </ion-item>
       <ion-item [ngClass]="{'fs-selected' : location == 'sdCard'}" (click)="setLocation('sdCard');">
         <ion-icon name="card" slot="start"></ion-icon>
         <ion-label>
@@ -58,6 +64,9 @@
     <ion-title *ngIf="location == 'network'">
       Network
     </ion-title>
+    <ion-title *ngIf="location == 'Download'">
+      Downloads
+    </ion-title>
     <ion-title *ngIf="location == 'trash'">
       Bin
     </ion-title>
@@ -65,8 +74,8 @@
     <ion-icon *ngIf="location == 'trash'" class="bin-button " slot="end" name="trash" (click)="emptyBin()"></ion-icon>
     <ion-icon class="option-button" slot="end" name="more" (click)="optionsPopover($event)"></ion-icon>
   </ion-toolbar>
-  <div *ngIf="location === 'home'" scrollX="true" class="directory-parent">
-    <ion-col *ngFor="let f of items | filterItems : 'directory', let i=index" class="list-items">
+  <div *ngIf="location === 'home' || location == 'Download'" scrollX="true" class="directory-parent">
+    <ion-col *ngFor="let f of (items) | filterItems : 'directory', let i=index" class="list-items">
       <ion-card (press)="itemPressed(f,i,$event)" (click)="itemClicked(f,i)">
         <ion-item lines="none" [ngClass]="{'activated-item': f.selected}" class="directory"  *ngIf="f.isDirectory" >
           <ion-icon *ngIf="!f.selected"  name="folder" slot="start" ></ion-icon>
@@ -84,9 +93,9 @@
 </ion-header>
 
 
-<ion-content *ngIf="items && location === 'home'">
+<ion-content *ngIf="items && (location === 'home' || location === 'Download')">
   <ion-list>
-    <ion-item-sliding   *ngFor="let f of items , let i=index" class="file-parent">
+    <ion-item-sliding   *ngFor="let f of (items), let i=index" class="file-parent">
       <ion-item lines="none" [ngClass]="{'activated-item': f.selected}" class="file"  *ngIf="!f.isDirectory" (press)="itemPressed(f,i)">
         <ion-icon *ngIf="!f.selected" (click)="itemPressed(f,i)" name="document" slot="start"></ion-icon>
         <ion-icon *ngIf="f.selected" (click)="itemPressed(f,i)" name="checkmark" slot="start" ></ion-icon>
@@ -135,20 +144,36 @@
 
 </ion-content>
 
-<ion-content *ngIf="items && location !== 'home' &&  location !== 'network'">
+<ion-content *ngIf="items && location !== 'home' && location !== 'Download' &&  location !== 'network'">
   <ion-list>
-    <ion-item-sliding   *ngFor="let f of items , let i=index" class="file-parent">
-      <ion-item lines="none"  class="file"  *ngIf="f.isDirectory">
+    <ion-item-sliding   *ngFor="let f of (items), let i=index" class="file-parent">
+      <ion-item lines="none"  class="file"  *ngIf="f.isDirectory"s>
         <ion-icon (click)="itemPressed(f,i)" name="folder" slot="start"></ion-icon>
-        <ion-label (click)="itemClicked(f,i)">
-          {{f.name | titlecase}}
-        </ion-label>
+        <div style="display: flex; flex-direction: column;">
+          <ion-label (click)="itemClicked(f,i)">
+            {{f.name | titlecase}}
+          </ion-label>
+          <ion-label style="font-size: smaller;">
+            {{f.modificationTime}}
+          </ion-label>
+        </div>
       </ion-item>
       <ion-item lines="none" class="file"  *ngIf="!f.isDirectory" >
         <ion-icon name="document" slot="start"></ion-icon>
-        <ion-label (click)="itemClicked(f,i)">
-          {{f.name | titlecase}}
-        </ion-label>
+        <div style="display: flex; flex-direction: column; width: 100%;">
+          <ion-label (click)="itemClicked(f,i)">
+            {{f.name | titlecase}}
+          </ion-label>
+          <div style="display: flex; flex-direction: row;justify-content:space-between;font-size: smaller;">
+            <ion-label>
+              {{f.modificationTime}}
+            </ion-label>
+            <ion-label>
+              {{f.size}}
+            </ion-label>
+          </div>
+        
+        </div>
       </ion-item>
   
       <!-- delete from bin -->
@@ -174,6 +199,18 @@
   <ion-item>
     <ion-label> Type address in your browser </ion-label>
   </ion-item>
+  <ion-item *ngIf="networkOn">
+    <ion-label> 
+      http://192.168.43.1:54321/
+    </ion-label>
+  </ion-item>
+
+  <ion-button (click)="startNetwrork(true)">
+    start
+  </ion-button>
+  <ion-button (click)="startNetwrork(false)">
+    stop
+  </ion-button>
 </ion-content>
 <div class="spinner"  *ngIf="spinner" >
   <ion-spinner name="crescent"></ion-spinner>

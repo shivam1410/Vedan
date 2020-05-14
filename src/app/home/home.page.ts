@@ -1,19 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { File, Entry } from '@ionic-native/file/ngx';
-import { Platform, Events} from '@ionic/angular'
+import { Component, OnInit, HostBinding } from '@angular/core';
+import { Platform, Events,  MenuController ,PopoverController} from '@ionic/angular'
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { MenuController } from '@ionic/angular';
-import { PopoverController } from '@ionic/angular';
-import {  PopoverComponent } from '../home/popover/popover.component'
-import { CopyComponent } from './copy/copy.component';
+
 import { CreateShelfComponent } from './create-shelf/create-shelf.component';
+import { PopoverComponent } from '../home/popover/popover.component'
+import { CopyComponent } from './copy/copy.component';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
+import { File, Entry } from '@ionic-native/file/ngx';
+//services
 import { FileService } from './service/file.service';
 import { ToastrService } from '../service/toastr.service';
 import { AlertService } from '../service/alert.service';
 import { BookService } from './service/book.service';
 import { NightmodeService } from '../service/nightmode.service';
+import { NetworkService } from '../service/network.service';
+import { BehaviorSubject } from 'rxjs';
+import { map, filter} from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-home',
@@ -31,6 +35,7 @@ export class HomePage implements OnInit {
   selectedFilesMap = {};
   selectAllItems = false;
   spinner: boolean = false;
+  networkOn;
   constructor(
     private file: File,
     private platform:Platform,
@@ -45,6 +50,7 @@ export class HomePage implements OnInit {
     private alert: AlertService,
     private bookService: BookService,
     private nightMd: NightmodeService,
+    private net: NetworkService,
   ) {
     this.spinner = true;
    }
@@ -52,11 +58,12 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.spinner = true;
     this.platform.ready().then(() => {
-      this.nightMd.toggleDarkMode(true);
         this.baseFS = this.route.snapshot.paramMap.get('baseFS') || this.file.externalRootDirectory;
         this.folder = this.route.snapshot.paramMap.get('folder') || 'Books';
         this.location = this.route.snapshot.paramMap.get('location') || 'home';
-        
+
+        this.nightmode = this.nightMd.checkMode()
+
         if(this.folder == 'Books')
         {
           this.file.checkDir(this.baseFS,this.folder)
@@ -66,6 +73,7 @@ export class HomePage implements OnInit {
           .catch(e=>{
             this.file.createDir(this.baseFS, this.folder,false)
             this.spinner = false;
+
           })
         }
         else{
@@ -91,7 +99,7 @@ export class HomePage implements OnInit {
         console.error("Platform Not Ready");
         this.spinner = false;
       })
-  }
+    }
 
   //menu functions switch
   openFirst() {
@@ -99,10 +107,15 @@ export class HomePage implements OnInit {
     this.menu.open();
   }
   setLocation(root){
+    this.spinner = true
     this.selectedFilesMap = {}
     switch (root) {
       case '':
         this.location = 'internal';
+        this.setDirectory(root);
+        break;
+      case 'Download':
+        this.location = 'Download';
         this.setDirectory(root);
         break;
       case 'Books':
@@ -145,6 +158,21 @@ export class HomePage implements OnInit {
   }
   network(){
     this.toastr.show("Network not Created now");
+  }
+  startNetwrork(check){
+    if(check){
+      this.net.start()
+      .then(d=>{
+        this.networkOn = d;
+      })
+      .catch(e=>{
+        console.error(e)
+      })
+    }
+    else{
+      this.net.stop();
+      this.networkOn = false;
+    }
   }
   openTrash(){
     
@@ -377,8 +405,6 @@ export class HomePage implements OnInit {
     this.copyItem(ev,copyfiles,moveFile,true,this.baseFS,this.folder)
     .finally(()=>{
       console.log('data')
-      this.discardLongPressOptions();
-      this.listDir();
     })
   }
 
@@ -493,8 +519,8 @@ export class HomePage implements OnInit {
               }
             })
           })
-          this.discardLongPressOptions();
         }
+        this.discardLongPressOptions();
       })
     })
     return await popover.present();
@@ -515,11 +541,13 @@ export class HomePage implements OnInit {
       {
         text: 'Cancel',
         role: 'cancel',
+        cssClass: 'alert-cancel-button',
         handler: () => {
           this.discardLongPressOptions();
         }
       }, {
         text: 'Sure',
+        cssClass: 'alert-sure-button',
         handler: () => {
           this.moveToBin(removeFile);
           this.discardLongPressOptions();
@@ -537,11 +565,13 @@ export class HomePage implements OnInit {
       {
         text: 'Cancel',
         role: 'cancel',
+        cssClass: 'alert-cancel-button',
         handler: (blah) => {
           this.discardLongPressOptions();
         }
       }, {
         text: 'Sure',
+        cssClass: 'alert-sure-button',
         handler: () => {
           this.spinner = true;
           const deletefiles = Object.values(this.selectedFilesMap);
