@@ -3,11 +3,12 @@
 
 ## Description
 This is a basic PDF viewer developed in Ionic with core being Angular.<br>
-I'm building this app according to my needs. This pdf viewer is like a Library. currently i've kept minimal functionality of listing, viewing of PDFs, located in Books folder of your internal directory and external both. Ionic dont have any native plugin to open a pdf so it uses [Sitewart cleverdox viewer](https://play.google.com/store/apps/details?id=de.sitewaerts.cleverdox.viewer)
+I'm building this app according to my needs.This pdf viewer is like a Library. currently i've kept minimal functionality of listing, viewing of PDFs, located in Books folder of your internal directory and external both. Ionic dont have any native plugin to open a pdf so it uses [Sitewart cleverdox viewer](https://play.google.com/store/apps/details?id=de.sitewaerts.cleverdox.viewer)
 </br>
 
 ## Contribution
-Hey there Developer, You can clone this and simply start to check the functionality. You can add whaterver the functionality you want. i created it for my personal use only. You can work on NightMode, or like different file operations maybe.
+Hey there Developer, You can clone this and simply start to check the functionality. You can add whatever the functionality you want. i created it entirely for my personal use only and experience. You can work on NightMode, or like different file operations maybe.</br>
+I have attached screen shot that you might have seen in readme page. Append any funcitonality you like.
 Go Ahead. keep Coding.
 
 ## Plugins used
