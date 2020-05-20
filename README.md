@@ -1,6 +1,6 @@
 # Vedan
 
-![Main Home](/resources/android/splash/drawable-land-hdpi-screen.png?raw=true "Title")
+![Main Home](src/assets/vadan-screen.jpg?raw=true "Title")
 
 ## Description
 This is a basic PDF manager developed in Ionic with core being Angular.<br>
