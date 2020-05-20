@@ -1,6 +1,6 @@
-# Vedan
-
 ![Main Home](src/assets/vadan-screen.jpg?raw=true "Title")
+
+# Vedan
 
 ## Description
 This is a basic PDF manager developed in Ionic with core being Angular.<br>
