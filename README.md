@@ -1,5 +1,7 @@
 # Vedan
 
+![Main Home](/resources/android/splash/drawable-land-hdpi-screen.png?raw=true "Title")
+
 ## Description
 This is a basic PDF manager developed in Ionic with core being Angular.<br>
 I'm building this app according to my needs. This pdf viewer is like a Library. currently i've kept minimal functionality of listing, viewing of PDFs, located in Books folder of your internal directory and external both. Ionic dont have any native plugin to open a pdf so it uses [Sitewart cleverdox viewer](https://play.google.com/store/apps/details?id=de.sitewaerts.cleverdox.viewer).x
