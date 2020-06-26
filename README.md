@@ -3,8 +3,12 @@
 # Vedan
 
 ## Description
-This is a basic PDF manager developed in Ionic with core being Angular.<br>
-I'm building this app according to my needs. This pdf viewer is like a Library. currently i've kept minimal functionality of listing, viewing of PDFs, located in Books folder of your internal directory and external both. Ionic dont have any native plugin to open a pdf so it uses [Sitewart cleverdox viewer](https://play.google.com/store/apps/details?id=de.sitewaerts.cleverdox.viewer).x
+1. This is a basic PDF manager developed in Ionic with the core being Angular.
+2. A basic PDF manager developed in Ionic.
+3. functionality like Import, copy, move, delete, share, PDF books.
+4. The dark mode is to make it cooler.
+5. This pdf viewer is like a Library. currently, the functionality is kept minimal of listing, viewing of PDFs, located in Books folder of your internal directory and external both.  
+6. Ionic dont have any native plugin to open a pdf so it uses [Sitewart cleverdox viewer](https://play.google.com/store/apps/details?id=de.sitewaerts.cleverdox.viewer)
 </br>
 
 ## Installation Ionic
