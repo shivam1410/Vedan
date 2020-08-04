@@ -18,6 +18,19 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG} from '@angular/platform-bro
 import * as Hammer from 'hammerjs';
 import { ToastrService } from './service/toastr.service';
 import { AlertService } from './service/alert.service';
+import { FirebaseSer } from './service/firebase.service';
+
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireStorageModule,
+  AngularFireStorageReference,
+  AngularFireUploadTask,
+  StorageBucket} from 'angularfire2/storage';
+
+import * as firebase from 'firebase/app';
+
+firebase.initializeApp(environment.firebase);
+
+import { environment } from 'src/environments/environment';
 
 export class HammerConfig extends HammerGestureConfig {
   buildHammer(element: HTMLElement) {
@@ -43,6 +56,8 @@ export class HammerConfig extends HammerGestureConfig {
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireStorageModule,
   ],
   providers: [
     StatusBar,
@@ -52,7 +67,9 @@ export class HammerConfig extends HammerGestureConfig {
     NavigationBar,
     AndroidPermissions,
     WebServer,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    FirebaseSer,
+    { provide: StorageBucket, useValue: "your" },
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy,  },
     {provide: HAMMER_GESTURE_CONFIG,useClass: HammerConfig}  ],
   bootstrap: [AppComponent],
   

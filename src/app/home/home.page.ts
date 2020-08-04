@@ -17,6 +17,7 @@ import { NightmodeService } from '../service/nightmode.service';
 import { NetworkService } from '../service/network.service';
 import { BehaviorSubject } from 'rxjs';
 import { map, filter} from 'rxjs/operators';
+import { FirebaseSer } from '../service/firebase.service';
 
 
 @Component({
@@ -51,6 +52,7 @@ export class HomePage implements OnInit {
     private bookService: BookService,
     private nightMd: NightmodeService,
     private net: NetworkService,
+    private firebase: FirebaseSer,
   ) {
     this.spinner = true;
    }
@@ -158,22 +160,24 @@ export class HomePage implements OnInit {
   }
   network(){
     this.toastr.show("Network not Created now");
+    this.spinner = false;
+    this.firebase.fetch();
   }
-  startNetwrork(check){
-    if(check){
-      this.net.start()
-      .then(d=>{
-        this.networkOn = d;
-      })
-      .catch(e=>{
-        console.error(e)
-      })
-    }
-    else{
-      this.net.stop();
-      this.networkOn = false;
-    }
-  }
+  // startNetwrork(check){
+  //   if(check){
+  //     this.net.start()
+  //     .then(d=>{
+  //       this.networkOn = d;
+  //     })
+  //     .catch(e=>{
+  //       console.error(e)
+  //     })
+  //   }
+  //   else{
+  //     this.net.stop();
+  //     this.networkOn = false;
+  //   }
+  // }
   openTrash(){
     
     const path = this.baseFS + '/Books'
